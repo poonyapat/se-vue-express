@@ -1,28 +1,19 @@
 <template>
-  <div id="app">
-  <v-app id="app" >
-    <v-content>
-      <v-container fluid >
-        <v-layout row wrap="false" align-center justify-space-around>
-           <v-flex lg7 xl3>
-              <pic></pic>
-           </v-flex>
-        </v-layout>
-      </v-container>
-    </v-content>
-  </v-app>
-</div>
-
+  <v-layout row align-center justify-space-around>
+      <v-flex lg7 xl3>
+        <carousel/>
+      </v-flex>
+  </v-layout>
 </template>
 
 <script>
 // @ is an alias to /src
 
-import Pic from '@/components/pic.vue'
+import Carousel from '@/components/Carousel'
 export default {
   name: 'home',
- components: {
-    Pic
- }
+  components: {
+    Carousel
+  }
 }
 </script>

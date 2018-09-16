@@ -1,10 +1,7 @@
 <template>
 <div>
-  
-   
   <v-carousel interval="5000" hide-delimiters felx>
     <v-carousel-item v-for="(item,i) in items" :key="i" v-bind:src="item.src" wight="200" >
-
     </v-carousel-item>
   </v-carousel>
 </div>

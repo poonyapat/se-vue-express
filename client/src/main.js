@@ -10,10 +10,9 @@ import 'vuetify/dist/vuetify.min.css'
 Vue.config.productionTip = false
 Vue.use(vuetify,{
   theme: {
-    primary: colors.black, // #E53935
+    // why did you define these theme? you didn't use theme
+    primary: colors.grey.darken4, // #E53935
     secondary: colors.red.lighten4, // #FFCDD2
-    accent: colors.indigo.base, // #3F51B5
-    inspire: colors.grey.darken3
   }
 })
 
