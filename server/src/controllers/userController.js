@@ -39,13 +39,8 @@ module.exports = {
                     error: 'Wrong password'
                 })
             }
-            // const userJSON = user.toJSON
-            const reducedUser = {
-                username: user.username,
-                role: user.role
-            }
             res.send({
-                user: reducedUser,
+                user: user.username,
                 token: jwtSignUser(reducedUser)
             })
         } catch (err) {
