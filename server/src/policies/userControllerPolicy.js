@@ -8,6 +8,10 @@ module.exports = {
             ),
             password: Joi.string().regex(
                 new RegExp('^[a-zA-Z0-9]{8,32}$')
+            ),
+            email: Joi.string().email(),
+            phoneNumber: Joi.string().regex(
+                new RegExp('^[0-9]{10,12}$')
             )
         }
 

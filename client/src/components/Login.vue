@@ -1,5 +1,5 @@
 <template>
-  <v-dialog width="500">
+  <v-dialog width="500" v-model="show">
     <slot slot="activator"/>
       <v-card max-width="500">
         <v-toolbar  color="" drak>
@@ -61,11 +61,11 @@ export default {
         const response = await UserService.authenticate({
           username: this.username,
           password: this.password
-        });
-        this.persistedLogin(response.data);
-        this.username = null;
-        this.password = null;
-        this.show = false;
+        })
+        this.persistedLogin(response.data)
+        this.username = ''
+        this.password = ''
+        this.show = false
       } catch (error) {
         this.error = error.response.data.error;
       }

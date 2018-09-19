@@ -8,9 +8,9 @@ module.exports = {
             dialect: process.env.DIALECT || 'postgres',
             host: process.env.HOST || 'localhost',
             port: process.env.PORT || '5432'
-        },
-        authentication: {
-            jwtSecret: process.env.JWT_SECRET || 'secret'
         }
+    },
+    authentication: {
+        jwtSecret: process.env.JWT_SECRET || 'secret'
     }
 }

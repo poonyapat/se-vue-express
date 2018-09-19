@@ -34,11 +34,12 @@
         <v-toolbar-items class="hidden-sm-and-down">
             <v-btn flat :to="{name: 'home'}">Home</v-btn>
             <login>
-                <v-btn flat>Login</v-btn>
+                <v-btn v-if="!isUserLoggedIn" flat>Login</v-btn>
             </login>
             <sign-up>
-                <v-btn flat>Sign up </v-btn>
+                <v-btn v-if="!isUserLoggedIn" flat>Sign up </v-btn>
             </sign-up>
+            <v-btn v-if="isUserLoggedIn" @click="logout()" flat>Logout</v-btn>
         </v-toolbar-items>
     </v-toolbar>
 </div>
@@ -47,13 +48,24 @@
 <script>
 import Login from '@/components/Login'
 import SignUp from '@/components/SignUp'
+import {mapState, mapActions} from 'vuex'
 export default {
-    data: () => ({
-      drawer: true
-    }),
-    components: {
-        Login, SignUp
-    }
+  data: () => ({
+    drawer: true
+  }),
+  components: {
+      Login, SignUp
+  },
+  computed: {
+    ...mapState([
+      'isUserLoggedIn'
+    ])
+  },
+  methods: {
+    ...mapActions([
+      'logout'
+    ])
+  },
 };
 </script>
 
