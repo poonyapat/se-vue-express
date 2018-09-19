@@ -29,10 +29,14 @@
     </v-navigation-drawer>
     <v-toolbar app fixed clipped-left class="black" dark>
         <v-toolbar-side-icon @click.stop="drawer = !drawer"></v-toolbar-side-icon>
-        <v-toolbar-title>logo</v-toolbar-title>
+        <router-link class="title pr-4" tag="span" :to="{name: 'home'}">
+          <v-toolbar-title>
+              <v-icon class="hidden-sm-and-down">home</v-icon>
+              Panut Team
+          </v-toolbar-title>
+        </router-link>
         <v-spacer></v-spacer>
         <v-toolbar-items class="hidden-sm-and-down">
-            <v-btn flat :to="{name: 'home'}">Home</v-btn>
             <login>
                 <v-btn v-if="!isUserLoggedIn" flat>Login</v-btn>
             </login>
@@ -70,4 +74,13 @@ export default {
 </script>
 
 <style>
+.title {
+  cursor: pointer;
+}
+.title:hover {
+  color: rgb(167, 167, 167);
+}
+.title:hover .v-icon {
+  color: rgb(167, 167, 167);
+}
 </style>
