@@ -4,12 +4,20 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.STRING,
             allowNull: false
         },
+        description: {
+            type: DataTypes.STRING,
+            allowNull: true
+        },
         tasks: {
-            type: DataTypes.ARRAY(DataTypes.STRING),
+            type: DataTypes.ARRAY(DataTypes.INTEGER),
             allowNull: false
         },
-        member: {
-            type: DataTypes.ARRAY(DataTypes.STRING),
+        members: {
+            type: DataTypes.ARRAY(DataTypes.INTEGER),
+            allowNull: false
+        },
+        status: {
+            type: DataTypes.ENUM('Close', 'Open'),
             allowNull: false
         }
     })

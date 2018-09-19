@@ -15,7 +15,7 @@ app.use(cors())
 
 require('./routes')(app)
 
-sequelize.sync().then(() => {
+sequelize.sync({force: false}).then(() => {
     app.listen(config.port)
     console.log(`Server stated on port ${config.port}`)
 })

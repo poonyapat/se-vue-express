@@ -11,7 +11,8 @@
             <v-text-field 
                 prepend-icon="person"
                 v-model="username"
-                label="Login" 
+                :rules="[rules.required]"
+                label="Username" 
                 type="text"
                 >
                 </v-text-field>
@@ -19,12 +20,10 @@
                 prepend-icon="lock"          
                 v-model="password"
                 :append-icon="show ? 'visibility_off' : 'visibility'"
-                :rules="[rules.required, rules.min]"
-                :type="show ? 'text' : 'password'"
-                label="Normal with hint text"
-                hint="At least 8 characters"
-                counter
-                @click:append="show = !show">
+                :rules="[rules.required]"
+                :type="showPassword ? 'text' : 'password'"
+                label="Password"
+                @click:append="showPassword = !showPassword">
                 </v-text-field>
               <p>{{error}}</p>
           </v-form>
@@ -45,6 +44,7 @@ export default {
   data() {
     return {
       show: false,
+      showPassword: false,
       username: "",
       password: "",
       error: "",
@@ -53,6 +53,14 @@ export default {
         min: v => v.length >= 8 || "Min 8 characters"
       }
     };
+  },
+  watch: {
+    show(val){
+      if (!val){
+        this.username = ""
+        this.password = ""
+      }
+    }
   },
   methods: {
     async login() {
@@ -70,7 +78,7 @@ export default {
         this.error = error.response.data.error;
       }
     },
-    ...mapActions(["persistedLogin", "setAttendees"])
+    ...mapActions(["persistedLogin"])
   },
 };
 </script>

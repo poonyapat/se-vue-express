@@ -33,9 +33,9 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.STRING,
             allowNull: true
         },
-        projects: {
-            type: DataTypes.ARRAY(DataTypes.INTEGER),
-            allowNull: false
+        avatarURL: {
+            type: DataTypes.STRING,
+            allowNull: true
         },
         skills: {
             type: DataTypes.JSON,

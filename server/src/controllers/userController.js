@@ -4,7 +4,6 @@ const config = require('../config/config')
 
 function jwtSignUser(user) {
     const ONE_WEEK = 7 * 24 * 60 * 60
-    console.log(config.authentication.jwtSecret)
     return jwt.sign(user, config.authentication.jwtSecret, {
         expiresIn: ONE_WEEK
     })
@@ -14,13 +13,34 @@ module.exports = {
     async register(req, res) {
         try {
             req.body.projects = []
-            req.body.skills = []
+            req.body.skills = {}
             const user = await User.create(req.body)
             res.send(user.toJSON())
         } catch (err) {
             res.status(400).send({
-                error: 'This account is already exist'
-                // error: err
+                // error: 'This account is already exist'
+                error: err
+            })
+        }
+    },
+    async findOne(req, res) {
+        try {
+            const user = await User.findOne({
+                where: {
+                    username: req.query.username
+                }
+            })
+            if (!user) {
+                res.status(403).send({
+                    error: 'This account doesn\'t exist'
+                })
+            }
+            delete user.password
+            res.send(user)
+        }catch (err) {
+            res.status(500).send({
+                // error: 'An error has occured trying to login'
+                error: err
             })
         }
     },
@@ -44,7 +64,7 @@ module.exports = {
                 })
             }
             res.send({
-                user: user.username,
+                username: user.username,
                 token: jwtSignUser(user.toJSON())
             })
         } catch (err) {

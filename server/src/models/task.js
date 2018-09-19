@@ -13,7 +13,7 @@ module.exports = (sequelize, DataTypes) => {
             allowNull: true
         },
         status: {
-            type: DataTypes.ENUM('ToDo','OnGoing','Done','Analyzing','Designing'),
+            type: DataTypes.ENUM('ToDo','OnGoing','Done','Analyzing','Cancel','Designing'),
             allowNull: false
         },
         estimatedCost: {
@@ -32,5 +32,7 @@ module.exports = (sequelize, DataTypes) => {
 
     const User = sequelize.import('./user')
     Task.belongsTo(User, {foreignKey: 'username'}) // person in charge
+    const Project = sequelize.import('./project')
+    Task.belongsTo(Project, {foreignKey: 'projectId'})
     return Task
 }

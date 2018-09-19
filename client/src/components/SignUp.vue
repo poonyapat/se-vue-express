@@ -1,5 +1,5 @@
 <template>
-<v-dialog width="500">
+<v-dialog width="500" v-model="show">
   <slot slot="activator"/>
   <v-card max-width="500">
     <v-toolbar dark>

@@ -14,6 +14,21 @@ export default {
   name: 'home',
   components: {
     Carousel
+  },
+  beforeCreate() {
+    if (this.$store.state.isUserLoggedIn){
+      this.$router.push({name: 'profile', params: {username: this.$store.state.user}})
+    }
+  },
+  watch: {
+    '$store.state.isUserLoggedIn': {
+      immediate: true,
+      async handler (value) {
+        if (value){
+          this.$router.push({name: 'profile', params: {username: this.$store.state.user}})
+        }
+      }
+    }
   }
 }
 </script>

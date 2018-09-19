@@ -2,7 +2,7 @@
   <v-app id="app" primary>
     <navigator/>
     <v-content>
-      <v-container fluid >
+      <v-container grid-list-lg>
         <router-view/>
       </v-container>
     </v-content>
@@ -14,6 +14,21 @@
   export default {
     components: {
       Navigator
+    },
+    beforeCreate() {
+      if (!this.$store.state.isUserLoggedIn){
+        this.$router.push({name: 'home'})
+      }
+    },
+    watch:{
+      '$store.state.isUserLoggedIn': {
+        immediate: true,
+        async handler (value) {
+          if (!value){
+            this.$router.push({name: 'home'})
+          }
+        }
+      }
     }
   }
 </script>
@@ -27,5 +42,9 @@
 }
 .v-dialog__activator {
   height: 100%;
+}
+
+.v-dialog__container {
+  display: block !important;
 }
 </style>

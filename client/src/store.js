@@ -11,7 +11,7 @@ export default new Vuex.Store({
   ],
   state: {
     token: null,
-    user: null,
+    username: null,
     isUserLoggedIn: false,
   },
   mutations: {
@@ -19,14 +19,14 @@ export default new Vuex.Store({
       state.token = token
       state.isUserLoggedIn = !!token
     },
-    setUser(state, user) {
-      state.user = user
+    setUser(state, username) {
+      state.username = username
     },
   },
   actions: {
     persistedLogin({commit}, data) {
       commit('setToken', data.token)
-      commit('setUser', data.user)
+      commit('setUser', data.username)
     },
     logout({commit}) {
       commit('setToken', null)

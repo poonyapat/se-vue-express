@@ -7,5 +7,13 @@ export default {
 
     register(userData) {
         return Api().post('register', userData)
+    },
+
+    findOne(username) {
+        return Api().get('user', {
+            params: {
+                username: username
+            }
+        })
     }
 }

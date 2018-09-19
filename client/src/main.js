@@ -12,7 +12,7 @@ Vue.use(vuetify,{
   theme: {
     // why did you define these theme? you didn't use theme
     primary: colors.grey.darken4, // #E53935
-    secondary: colors.red.lighten4, // #FFCDD2
+    secondary: colors.pink.lighten2, // #FFCDD2
   }
 })
 
