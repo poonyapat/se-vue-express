@@ -10,7 +10,7 @@
         >
             <v-list-tile-content>
               <v-list-tile-title>{{ skill }}</v-list-tile-title>
-              <v-list-tile-title> {{value}} </v-list-tile-title>
+              <v-list-tile-sub-title> {{value}} </v-list-tile-sub-title>
             </v-list-tile-content>
         </v-list-tile>
     </v-list>
