@@ -8,7 +8,7 @@
       dark
     >
       <v-list>
-        <v-list-tile @click="navigateTo({name:'home'})" >
+        <v-list-tile @click="navigateTo(isUserLoggedIn?{name: 'profile', params: {username: this.$store.state.user}}:{name:'home'})" >
           <v-list-tile-action>
             <v-icon>home</v-icon>
           </v-list-tile-action>
@@ -56,7 +56,7 @@
     </v-navigation-drawer>
     <v-toolbar class="primary" dark>
         <v-toolbar-side-icon @click.stop="drawer = !drawer" class="hidden-md-and-up"></v-toolbar-side-icon>
-        <router-link class="title pr-4" tag="span" :to="{name: 'home'}">
+        <router-link class="title pr-4" tag="span" :to="isUserLoggedIn?{name: 'profile', params: {username: this.$store.state.user}}:{name: 'home'}">
           <v-toolbar-title>
               <v-icon class="hidden-sm-and-down">home</v-icon>
               {{!isUserLoggedIn?  'Panut Team': username}}

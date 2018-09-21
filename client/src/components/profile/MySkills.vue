@@ -2,15 +2,15 @@
     <v-list expand flat dark>
         <!-- {{ skills }} -->
         <v-list-tile 
-            v-for="(value, skill) in skills" 
-            :key="skill"
+            v-for="(skill) in sortedSkills" 
+            :key="skill.name"
             avatar
-            :class="'my-3 py-3 '+color(value)"
+            :class="'my-3 py-3 '+color(skill.level)"
             @click="0"
         >
             <v-list-tile-content>
-              <v-list-tile-title>{{ skill }}</v-list-tile-title>
-              <v-list-tile-sub-title> {{value}} </v-list-tile-sub-title>
+              <v-list-tile-title>{{ skill.name }}</v-list-tile-title>
+              <v-list-tile-sub-title> {{ skill.level }} </v-list-tile-sub-title>
             </v-list-tile-content>
         </v-list-tile>
     </v-list>
@@ -22,17 +22,21 @@ import {mapState} from 'vuex'
 export default {
     data() {
         return {
-            skills: [],
+            sortedSkills: [],
             maxLevel: 0
         }
     },
     async mounted() {
-        this.skills = (await UserService.findOne(this.username)).data.skills
-        for (let skill in this.skills){
-            if (this.skills[skill] > this.maxLevel){
-                this.maxLevel = this.skills[skill]
+        let skills = (await UserService.findOne(this.username)).data.skills
+        for (let skill in skills){
+            if (skills[skill] > this.maxLevel){
+                this.maxLevel = skills[skill]
             }
+            this.sortedSkills.push({'name': skill, 'level': skills[skill]})
         }
+        this.sortedSkills.sort((a,b)=> {
+            return b.level - a.level
+        })
     },
     methods: {
         color(level) {
@@ -53,7 +57,7 @@ export default {
     computed: {
         ...mapState([
             'username'
-        ])
+        ]),
     },
 }
 </script>

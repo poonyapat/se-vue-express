@@ -1,8 +1,8 @@
 <template>
-  <v-app id="app" primary>
+  <v-app id="app">
     <navigator/>
     <v-content>
-      <v-container grid-list-lg>
+      <v-container grid-list-lg style="height: 100%">
         <router-view/>
       </v-container>
     </v-content>

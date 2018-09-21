@@ -2,7 +2,9 @@
     <v-layout row wrap justify-center>
         <v-flex xs12 sm4 md3>
             <v-card flat dark>
-                <v-img :src="user && user.avatarURL?user.avatarURL:defaultAvatar" alt=""/>
+                <v-avatar size="100%">
+                    <v-img :src="user && user.avatarURL?user.avatarURL:defaultAvatar" alt=""/>
+                </v-avatar>
                 <v-card-title primary-title>
                     <h2 class="headline mb-0">
                         {{user?user.username:''}}
