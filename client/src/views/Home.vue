@@ -4,14 +4,20 @@
         <carousel/>
       </v-flex>
   </v-layout> -->
-  <v-jumbotron>
+  <v-jumbotron
+    :gradient="gradient"
+    dark
+    src="https://cdn.vuetifyjs.com/images/parallax/material2.jpg"
+    height="100%"
+    width="100%"
+    class="ma-0" >
     <v-container fill-height>
       <v-layout align-center>
         <v-flex class="white--text">
           <h3 class="display-3">Welcome to the Panut Team</h3>
 
           <span class="subheading">Panut Team help you coordinate and manage all the work your team does together. 
-            <br> So everyone knows they have to do,who’s responsible for doing it, and when it’s due.</span>
+            <br> So everyone knows what they have to do, who’s responsible for doing it, and when it’s due.</span>
 
           <v-divider class="my-3"></v-divider>
           
@@ -38,6 +44,11 @@ import Carousel from '@/components/Carousel'
 import SignUp from '@/components/SignUp'
 export default {
   name: 'home',
+  data() {
+    return {
+      gradient: 'to top right, rgba(63,81,255, .8), rgba(25,32,72, .7)'
+    }
+  },
   components: {
     Carousel, SignUp
   },

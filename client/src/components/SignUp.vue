@@ -17,7 +17,7 @@
     </v-card-text>
     <v-card-actions>
       <v-spacer></v-spacer>
-      <v-btn @click="register()">Login</v-btn>
+      <v-btn @click="register()">Register</v-btn>
     </v-card-actions>
   </v-card>
 </v-dialog>

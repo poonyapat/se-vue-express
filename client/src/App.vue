@@ -2,9 +2,7 @@
   <v-app id="app">
     <navigator/>
     <v-content>
-      <v-container grid-list-lg style="height: 100%">
         <router-view/>
-      </v-container>
     </v-content>
   </v-app>
 
