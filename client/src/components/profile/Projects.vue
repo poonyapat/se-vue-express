@@ -1,9 +1,18 @@
 <template>
     <v-list expand flat dark>
-        <!-- {{ projects }} -->
+        <v-toolbar flat class="secondary">
+            <v-text-field
+                label="Search"
+                outline
+                append-icon="search"
+                v-model="query"
+            ></v-text-field>
+            <v-btn round large><v-icon>add</v-icon>new</v-btn>
+        </v-toolbar>
         <v-list-tile 
             v-for="project in projects" 
             :key="project.id"
+            v-show="project.name.toLowerCase().includes(query.toLowerCase())"
             avatar
             :class="'my-3 py-3 '+color(project)"
             @click="0"
@@ -22,7 +31,8 @@ import {mapState} from 'vuex'
 export default {
     data() {
         return {
-            projects: []
+            projects: [],
+            query: ''
         }
     },
     async mounted() {

@@ -9,7 +9,11 @@
                     <v-card-title primary-title>
                         <h2 class="headline mb-0">
                             {{user?user.username:''}}
-                        </h2>   
+                        </h2>
+                        <v-spacer></v-spacer>
+                        <router-link :to="{name:'profile', params: {username: this.username}}">
+                            <v-icon>edit</v-icon>
+                        </router-link>
                     </v-card-title>
                     <v-divider></v-divider>
                     <v-card-text>

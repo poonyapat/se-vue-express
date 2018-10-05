@@ -22,15 +22,15 @@
           <v-divider class="my-3"></v-divider>
           
           
-            <sign-up v-if="!isUserLoggedIn">
+            <Login v-if="!isUserLoggedIn">
                 <v-btn
             class="mx-0"
             color="primary"
             large
           >
-            Join Us
+            Get Started
           </v-btn>
-            </sign-up>
+            </Login>
         </v-flex>
       </v-layout>
     </v-container>
@@ -41,7 +41,8 @@
 // @ is an alias to /src
 
 import Carousel from '@/components/Carousel'
-import SignUp from '@/components/SignUp'
+import Login from '@/components/Login'
+import {mapState} from 'vuex'
 export default {
   name: 'home',
   data() {
@@ -49,20 +50,25 @@ export default {
       gradient: 'to top right, rgba(63,81,255, .8), rgba(25,32,72, .7)'
     }
   },
-  components: {
-    Carousel, SignUp
+  computed: {
+    ...mapState([
+      'username', 'isUserLoggedIn'
+    ])
   },
-  beforeCreate() {
-    if (this.$store.state.isUserLoggedIn){
-      this.$router.push({name: 'profile', params: {username: this.$store.state.user}})
+  components: {
+    Carousel, Login
+  },
+  mounted() {
+    if (this.isUserLoggedIn){
+      this.$router.push({name: 'profile', params: {username: this.username}})
     }
   },
   watch: {
-    '$store.state.isUserLoggedIn': {
+    'isUserLoggedIn': {
       immediate: true,
       async handler (value) {
         if (value){
-          this.$router.push({name: 'profile', params: {username: this.$store.state.user}})
+          this.$router.push({name: 'profile', params: {username: this.username}})
         }
       }
     }

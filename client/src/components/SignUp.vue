@@ -3,7 +3,7 @@
   <slot slot="activator"/>
   <v-card max-width="500">
     <v-toolbar dark>
-      <v-toolbar-title dark> <v-icon>favorite</v-icon>Sign up</v-toolbar-title>
+      <v-toolbar-title dark> <v-icon>person_add</v-icon>Sign up</v-toolbar-title>
       <v-spacer></v-spacer>
     </v-toolbar>
     <v-card-text>
@@ -18,6 +18,7 @@
     <v-card-actions>
       <v-spacer></v-spacer>
       <v-btn @click="register()">Register</v-btn>
+      <v-spacer></v-spacer>
     </v-card-actions>
   </v-card>
 </v-dialog>

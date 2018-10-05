@@ -3,10 +3,10 @@
     <slot slot="activator"/>
       <v-card max-width="500">
         <v-toolbar  color="" drak>
-          <v-toolbar-title color= drak> <v-icon>favorite</v-icon> login</v-toolbar-title>
+          <v-toolbar-title color= drak> <v-icon>person</v-icon> login</v-toolbar-title>
           <v-spacer></v-spacer>
         </v-toolbar>
-        <v-card-text>
+        <v-card-text class="pb-0">
           <v-form>
             <v-text-field 
                 prepend-icon="person"
@@ -30,7 +30,14 @@
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn @click="login()">Login</v-btn>
+          <div>
+            <v-btn @click="login()">Login</v-btn>
+            <sign-up class="my-2">
+              <!-- <v-btn flat><small>sign up</small> </v-btn> -->
+              <small>Sign Up</small>
+            </sign-up>
+          </div>
+          <v-spacer></v-spacer>
         </v-card-actions>
       </v-card>
   </v-dialog>
@@ -38,6 +45,7 @@
 </template>
 
 <script>
+import SignUp from '@/components/SignUp'
 import { mapActions } from "vuex";
 import UserService from '@/services/userService'
 export default {
@@ -53,6 +61,9 @@ export default {
         min: v => v.length >= 8 || "Min 8 characters"
       }
     };
+  },
+  components: {
+    SignUp
   },
   watch: {
     show(val){
@@ -83,3 +94,8 @@ export default {
 };
 </script>
 
+<style scoped>
+small:hover {
+  color: #AAA !important
+}
+</style>

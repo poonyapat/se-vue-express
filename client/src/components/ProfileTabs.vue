@@ -40,8 +40,7 @@ export default {
             items: [
                 {name:'Projects', icon:'dashboard', component: 'projects'}, 
                 {name:'Assignments', icon:'assignment', component: 'assignments'},
-                {name:'My Skills', icon:'view_list', component: 'my-skills'},
-                {name:'Edit Profile', icon:'settings', component: 'projects'}
+                {name:'My Skills', icon:'view_list', component: 'my-skills'}
             ]
         }
     },
