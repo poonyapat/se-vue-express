@@ -7,6 +7,7 @@
           <v-spacer></v-spacer>
         </v-toolbar>
         <v-card-text class="pb-0">
+          <!-- scope ช่วง  input -->
           <v-form>
             <v-text-field 
                 prepend-icon="person"
@@ -27,19 +28,20 @@
                 </v-text-field>
               <p>{{error}}</p>
           </v-form>
+     <!-- scope ช้วง  input -->
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
           <div>
             <v-btn @click="login()">Login</v-btn>
-            <sign-up class="my-2">
-              <!-- <v-btn flat><small>sign up</small> </v-btn> -->
-              <small>Sign Up</small>
+            <sign-up class="my-2"> 
+            <!-- <v-btn flat><small>sign up</small> </v-btn>  -->
+            <small>Sign Up</small>
             </sign-up>
           </div>
           <v-spacer></v-spacer>
         </v-card-actions>
-      </v-card>
+      </v-card> 
   </v-dialog>
 
 </template>

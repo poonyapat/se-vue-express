@@ -19,7 +19,8 @@ module.exports = (sequelize, DataTypes) => {
         status: {
             type: DataTypes.ENUM('Close', 'Open'),
             allowNull: false
-        }
+        },
+    
     })
 
     const User = sequelize.import('./user')
