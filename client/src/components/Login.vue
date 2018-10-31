@@ -33,10 +33,10 @@
         <v-card-actions>
           <v-spacer></v-spacer>
           <div>
-            <v-btn @click="login()">Login</v-btn>
-            <sign-up class="my-2"> 
-            <!-- <v-btn flat><small>sign up</small> </v-btn>  -->
-            <small>Sign Up</small>
+            <v-btn @click="login()" round>Login</v-btn>
+            <sign-up class="my-2">
+              <!-- <v-btn flat><small>sign up</small> </v-btn> -->
+              <small>Sign Up</small>
             </sign-up>
           </div>
           <v-spacer></v-spacer>
