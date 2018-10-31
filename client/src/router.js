@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import Home from '@/views/Home'
 import Profile from '@/views/Profile'
 
+
 Vue.use(Router)
 
 export default new Router({
@@ -18,6 +19,8 @@ export default new Router({
       path: '/:username',
       name: 'profile',
       component: Profile
-    }
+    },
+    
+    
   ]
 })
