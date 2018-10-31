@@ -3,7 +3,7 @@
         v-model="currentItem"
         fixed-tabs
         dark
-        slider-color="secondary"
+        slider-color="white"
         icons-and-text
         show-arrows
     >
