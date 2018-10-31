@@ -27,22 +27,25 @@
         </v-toolbar >
 
 
-      <router-link to="projectTabs">
+         <!-- <router-link :to="{name:'projectTabs', params: {id: project.id  }}"> -->
         <v-list-tile 
             v-for="project in projects" 
             :key="project.id"
             v-show="project.name.toLowerCase().includes(query.toLowerCase())"
             avatar
             :class="'my-3 py-3 '+color(project)"
-            @click="0"
-            @show="mounted"
+            @click="navigateTo({name:'projectTabs', params: {id: project.id,name: project.name}})"
         >
+     
             <v-list-tile-content>
               <v-list-tile-title>{{ project.name }}</v-list-tile-title>
               <v-list-tile-sub-title>{{ project.description }}</v-list-tile-sub-title>
+         
+
             </v-list-tile-content>
+              
         </v-list-tile>
-      </router-link >
+    <!-- </router-link > -->
 
 
     </v-list>
@@ -63,12 +66,16 @@ export default {
     },
     async mounted() {
         this.projects = (await ProjectService.findAll({
-            username: this.username
+            username: this.username,
+       
         })).data
     },
     methods: {
         color(project) {
             return project.status === 'Open'? 'cyan': 'grey'
+        },
+         navigateTo(destination){
+            this.$router.push(destination)
         }
     },
     computed: {

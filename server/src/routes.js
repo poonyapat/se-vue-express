@@ -23,6 +23,9 @@ module.exports = (app) => {
     
     app.get('/projects',
         ProjectController.findAll)
+
+    app.get('/project',
+        ProjectController.findOne)
     
     app.get('/tasks',
         TaskController.findAll)

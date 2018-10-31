@@ -1,5 +1,4 @@
 import Api from '@/services/api'
-
 export default {
 
     create(projectData) {
@@ -10,6 +9,12 @@ export default {
     findAll(queryObject) {
         return Api().get('projects', {
             params: queryObject
+        })
+    },
+
+    findOne(id) {
+        return Api().get('project', {
+            params: { id: id  }
         })
     }
 }

@@ -30,4 +30,27 @@ module.exports = {
             })
         }
     },
+    async findOne(req, res) {
+        try {
+            const project = await Project.findOne({
+                where: {
+                    id: req.query.id
+                }
+            })
+            // if (!id) {
+            //     res.status(403).send({
+            //         error: 'This project doesn\'t exist'
+            //     })
+            // }
+           // delete user.password
+            res.send(project)
+        }catch (err) {
+            res.status(501).send({
+                // error: 'An error has occured trying to login'
+                error: err
+            })
+        }
+    },
+
+  
 }

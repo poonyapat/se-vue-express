@@ -2,7 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import Home from '@/views/Home'
 import Profile from '@/views/Profile'
-
+import ProjectTabs from '@/components/ProjectTabs'
 
 Vue.use(Router)
 
@@ -20,7 +20,11 @@ export default new Router({
       name: 'profile',
       component: Profile
     },
-    
+    {
+      path: '/:name',
+      name: 'projectTabs',
+      component: ProjectTabs
+    },
     
   ]
 })

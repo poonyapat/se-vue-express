@@ -5,7 +5,7 @@ import store from './store'
 import vuetify from 'vuetify'
 import colors from 'vuetify/es5/util/colors'
 import 'vuetify/dist/vuetify.min.css'
-
+import { sync } from 'vuex-router-sync'
 
 Vue.config.productionTip = false
 Vue.use(vuetify,{
@@ -15,6 +15,9 @@ Vue.use(vuetify,{
     secondary: colors.grey.darken3, // #FFCDD2
   }
 })
+
+
+sync(store, router)
 
 new Vue({
   router,
