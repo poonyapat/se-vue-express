@@ -25,9 +25,12 @@ module.exports = (sequelize, DataTypes) => {
             allowNull: true
         },
         children: {
-            type: DataTypes.ARRAY(DataTypes.STRING),
+            //old
+            // type: DataTypes.ARRAY(DataTypes.STRING),
+            // allowNull: false
+            type: DataTypes.ARRAY(DataTypes.INTEGER),
             allowNull: false
-        }
+        },
     })
 
     const User = sequelize.import('./user')

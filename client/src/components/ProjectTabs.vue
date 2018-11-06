@@ -8,6 +8,7 @@
           </v-toolbar>
           <v-card-text>
           {{ project.description }} 
+       
           </v-card-text>
         </v-card>
         <v-tabs
@@ -22,8 +23,21 @@
               v-for="item in items"
               :key="item"
             >
-              {{ item }}
+              <v-icon large> {{ item.icon }} </v-icon>
+              {{ item.name }}
+       
             </v-tab>
+
+              <v-tabs-items 
+              :class="{'ma-0': $vuetify.breakpoint.smAndDown, 'mx-5': $vuetify.breakpoint.mdAndUp}">
+              <v-tab-item
+                  v-for="item in items"
+                  :id="'tab-' + item.name"
+                  :key="item.name"
+              >
+                  <component :is="item.component"/>
+              </v-tab-item> 
+        </v-tabs-items>
         </v-tabs>
       </v-flex>
     </v-layout>
@@ -33,21 +47,26 @@
 <script>
 
  import ProjectService from '@/services/projectService'
+ import Task from '@/components/project/Task'
 export default {
     data() {
         return {
             project: {},
             id:'',
             items: [
-                 'Task', 'Member', 'Issue', '...'
+                {name:'Task', icon: 'assignment',component :'Task'},
+                {name:'Member', icon:'group',component:''},
+                {name:'Issue',icon:'warning',component:''},
+                {name:'...',icon:'',component:''}
             ],           
          }
     },
-    
+     components: {
+        Task, 
+    },
 
     async mounted() {
          const id = this.$store.state.route.params.id
-         console.log(id)
          this.project = (await ProjectService.findOne(id)).data
     },
 }

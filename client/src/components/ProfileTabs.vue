@@ -16,7 +16,7 @@
             <v-icon large> {{ item.icon }} </v-icon>
         </v-tab>
 
-        <v-tabs-items 
+         <v-tabs-items 
             :class="{'ma-0': $vuetify.breakpoint.smAndDown, 'mx-5': $vuetify.breakpoint.mdAndUp}">
             <v-tab-item
                 v-for="item in items"
@@ -24,7 +24,7 @@
                 :key="item.name"
             >
                 <component :is="item.component"/>
-            </v-tab-item>
+            </v-tab-item> 
         </v-tabs-items>
     </v-tabs>
 </template>

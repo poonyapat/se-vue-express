@@ -24,33 +24,6 @@
                 type="text"
                 >
              </v-text-field>
-<!-- // ---------------------------- -->
-              <!-- <v-text-field 
-                prepend-icon="person_add"
-                v-model="members[0]"
-                label="Add Users" 
-                type="text"
-                >
-             </v-text-field>
-         
-                 <v-text-field 
-                prepend-icon="person_add"
-                v-model="members[1]"
-                label="Add Users" 
-                type="text"
-                >
-         
-             </v-text-field>
-                 <v-text-field 
-                prepend-icon="person_add"
-                v-model="members[2]"
-                label="Add Users" 
-                type="text"
-                >
-             </v-text-field> -->
-
-
-<!-- // ---------------------------- -->
 
           </v-form>
 

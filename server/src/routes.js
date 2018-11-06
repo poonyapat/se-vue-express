@@ -32,4 +32,8 @@ module.exports = (app) => {
     
     app.post('/task/create',
         TaskController.create)
+    
+    app.get('/task',
+        TaskController.findOne)
+    
 }

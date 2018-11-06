@@ -18,19 +18,20 @@
       
  
 
-
-  <!--   <v-dialog   max-width="225px">
-              <v-btn slot="activator" round large><v-icon>add</v-icon>new</v-btn>
- 
-    <create/>
-    </v-dialog>    -->
         </v-toolbar >
 
-
-         <!-- <router-link :to="{name:'projectTabs', params: {id: project.id  }}"> -->
+        <v-pagination
+                v-if="projects.length"
+                v-model="page"
+                :length="maxPage"
+                :total-visible="7"
+                round
+         ></v-pagination>
+       
         <v-list-tile 
             v-for="project in projects" 
             :key="project.id"
+           
             v-show="project.name.toLowerCase().includes(query.toLowerCase())"
             avatar
             :class="'my-3 py-3 '+color(project)"
@@ -40,12 +41,17 @@
             <v-list-tile-content>
               <v-list-tile-title>{{ project.name }}</v-list-tile-title>
               <v-list-tile-sub-title>{{ project.description }}</v-list-tile-sub-title>
-         
 
             </v-list-tile-content>
-              
+                          
         </v-list-tile>
-    <!-- </router-link > -->
+            <v-pagination
+                v-if="projects.length"
+                v-model="page"
+                :length="maxPage"
+                :total-visible="7"
+                round
+            ></v-pagination>
 
 
     </v-list>
@@ -61,15 +67,23 @@ export default {
     data() {
         return {
             projects: [],
-            query: ''
-        }
+            query: '',
+            
+             page:1,
+             maxPage: 1,
+    
+    }
     },
     async mounted() {
         this.projects = (await ProjectService.findAll({
             username: this.username,
        
-        })).data
+        })).data  
+  
+   
     },
+    // mounted() { this.$router.push({ query: {page: this.page}})
+    // },
     methods: {
         color(project) {
             return project.status === 'Open'? 'cyan': 'grey'
@@ -85,7 +99,21 @@ export default {
     },
     components :{
         Create
-    }
+    },
+    // watch :{ 
+    //     '$route.query.page': {
+    //         immediate: true,
+    //         async handler (value) {
+    //             this.page = parseInt(value)
+    //             let temp = (await ProjectService.findAll({page:value})).data
+    //             this.projects = temp.rows;
+    //             this.maxPage = Math.ceil(temp.count/10)
+    //            // this.loaded = true
+    //             console.log(this.projects.length)
+    //         }
+    //     },
+
+    // }
 
 }
 </script>
