@@ -48,6 +48,9 @@
 
  import ProjectService from '@/services/projectService'
  import Task from '@/components/project/Task'
+ import MemberTable from '@/components/project/MemberTable'
+ import IssueTable from '@/components/project/IssueTable'
+ 
 export default {
     data() {
         return {
@@ -55,14 +58,14 @@ export default {
             id:'',
             items: [
                 {name:'Task', icon: 'assignment',component :'Task'},
-                {name:'Member', icon:'group',component:''},
-                {name:'Issue',icon:'warning',component:''},
+                {name:'Member', icon:'group',component:'MemberTable'},
+                {name:'Issue',icon:'warning',component:'IssueTable'},
                 {name:'...',icon:'',component:''}
             ],           
          }
     },
      components: {
-        Task, 
+        Task, MemberTable, IssueTable
     },
 
     async mounted() {
