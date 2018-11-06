@@ -7,20 +7,16 @@ module.exports = {
             req.body.children = []
             taskId = null          
             const task = await Task.create(req.body)
-            console.log(req.body)
             taskId = task.id         
             const project = await Project.findOne({
                 where: {
                     id: task.projectId
                 }
             })
-           console.log(task.body)
-        console.log(project.name)
             project.tasks.push(task.id)       
             project.update({
                 tasks: project.tasks
             })
-           //tum add
             if ( req.body.parentId != null){
                     const parentTask = await Task.findOne({
                         where:{
@@ -33,13 +29,9 @@ module.exports = {
                         children :parentTask.children
                     })
              }
-           //
             res.send({
                 task: task,
                 project: project,
-                // //tum add
-                // parentTask: parentTask
-                // //
             })
         } catch (err) {
             Task.destroy({
@@ -47,11 +39,6 @@ module.exports = {
                     id: taskId
                 }
             }),
-            // Project.destroy({
-            //     where: {
-            //         tasks: taskId
-            //     }  
-            // })
             res.status(500).send({
                 error: err
             })

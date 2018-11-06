@@ -5,8 +5,10 @@
       <v-btn slot="activator" icon><v-icon>add</v-icon></v-btn>
       <v-card max-width="500px"> 
         <v-toolbar  color="" drak>
-          <v-toolbar-title color= drak> <v-icon>create_new_folder</v-icon><content v-if="taskId == null"> Create Task</content>
-                                                                          <content v-else>Create Subtask</content>
+          <v-toolbar-title color= drak> 
+            <v-icon>create_new_folder</v-icon>
+            <content v-if="taskId == null"> Create Task</content>
+            <content v-else>Create Subtask</content>
           </v-toolbar-title>
           <v-spacer></v-spacer>
         </v-toolbar>
