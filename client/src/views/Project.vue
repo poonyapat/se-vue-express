@@ -47,7 +47,7 @@
 <script>
 
  import ProjectService from '@/services/projectService'
- import Task from '@/components/project/Task'
+ import TaskTable from '@/components/project/TaskTable'
  import MemberTable from '@/components/project/MemberTable'
  import IssueTable from '@/components/project/IssueTable'
  
@@ -57,7 +57,7 @@ export default {
             project: {},
             id:'',
             items: [
-                {name:'Task', icon: 'assignment',component :'Task'},
+                {name:'Task', icon: 'assignment',component :'TaskTable'},
                 {name:'Member', icon:'group',component:'MemberTable'},
                 {name:'Issue',icon:'warning',component:'IssueTable'},
                 {name:'...',icon:'',component:''}
@@ -65,7 +65,7 @@ export default {
          }
     },
      components: {
-        Task, MemberTable, IssueTable
+        TaskTable, MemberTable, IssueTable
     },
 
     async mounted() {
