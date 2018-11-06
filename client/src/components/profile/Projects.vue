@@ -35,7 +35,7 @@
             v-show="project.name.toLowerCase().includes(query.toLowerCase())"
             avatar
             :class="'my-3 py-3 '+color(project)"
-            @click="navigateTo({name:'projectTabs', params: {id: project.id,name: project.name}})"
+            @click="navigateTo({name:'project', params: {id: project.id}})"
         >
      
             <v-list-tile-content>
