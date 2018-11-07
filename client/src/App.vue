@@ -1,9 +1,7 @@
 <template>
   <v-app id="app">
     <navigator/>
-    <v-content>
-        <router-view/>
-    </v-content>
+    <router-view/>
   </v-app>
 
 </template>
@@ -30,19 +28,6 @@
     }
   }
 </script>
-<style>
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  background-color:#424242;
-}
-.v-dialog__activator {
-  height: 100%;
-}
+<style src="./theme.css">
 
-.v-dialog__container {
-  display: block !important;
-}
 </style>

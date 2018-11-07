@@ -8,13 +8,17 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.TEXT,
             allowNull: true
         },
+        startDate: {
+            type: DataTypes.DATE,
+            allowNull: true
+        },
         finishDate: {
             type: DataTypes.DATE,
             allowNull: true
         },
         status: {
-            type: DataTypes.ENUM('ToDo','OnGoing','Done','Analyzing','Cancel','Designing'),
-            allowNull: false
+            type: DataTypes.ENUM('ToDo', 'OnGoing', 'Done', 'Analyzing', 'Cancel', 'Designing'),
+            defaultValue: 'ToDo'
         },
         estimatedCost: {
             type: DataTypes.DOUBLE,
@@ -24,18 +28,23 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.INTEGER,
             allowNull: true
         },
-        children: {
-            //old
-            // type: DataTypes.ARRAY(DataTypes.STRING),
-            // allowNull: false
-            type: DataTypes.ARRAY(DataTypes.INTEGER),
-            allowNull: false
+        parent: {
+            type: DataTypes.INTEGER,
+            allowNull: true
         },
+        sprint: {
+            type: DataTypes.INTEGER,
+            allowNull: true
+        }
     })
 
     const User = sequelize.import('./user')
-    Task.belongsTo(User, {foreignKey: 'username'}) // person in charge
+    Task.belongsTo(User, {
+        foreignKey: 'username'
+    }) // person in charge
     const Project = sequelize.import('./project')
-    Task.belongsTo(Project, {foreignKey: 'projectId'})
+    Task.belongsTo(Project, {
+        foreignKey: 'projectId'
+    })
     return Task
 }

@@ -21,23 +21,24 @@
             <!-- <v-tabs-slider color="dark"></v-tabs-slider> -->
             <v-tab
               v-for="item in items"
-              :key="item"
+              :key="item.name"
             >
               <v-icon large> {{ item.icon }} </v-icon>
               {{ item.name }}
        
             </v-tab>
 
-              <v-tabs-items 
-              :class="{'ma-0': $vuetify.breakpoint.smAndDown, 'mx-5': $vuetify.breakpoint.mdAndUp}">
+            <v-tabs-items>
               <v-tab-item
                   v-for="item in items"
                   :id="'tab-' + item.name"
                   :key="item.name"
               >
-                  <component :is="item.component"/>
+                <v-container class="secondary">
+                  <component :is="item.component" v-bind="properties[item.name]"/>
+                </v-container>
               </v-tab-item> 
-        </v-tabs-items>
+            </v-tabs-items>
         </v-tabs>
       </v-flex>
     </v-layout>
@@ -61,16 +62,23 @@ export default {
                 {name:'Member', icon:'group',component:'MemberTable'},
                 {name:'Issue',icon:'warning',component:'IssueTable'},
                 {name:'...',icon:'',component:''}
-            ],           
+            ],  
+            tab: null
          }
     },
-     components: {
-        TaskTable, MemberTable, IssueTable
+    computed: {
+      properties: function(){
+        return {
+          'Task': {project: this.project}
+        }
+      }
     },
-
+    components: {
+      TaskTable, MemberTable, IssueTable
+    },
     async mounted() {
-         const id = this.$store.state.route.params.id
-         this.project = (await ProjectService.findOne(id)).data
+      const id = this.$store.state.route.params.id
+      this.project = (await ProjectService.findOne(id)).data
     },
 }
 </script>

@@ -1,146 +1,90 @@
 <template>
- <v-layout>
-
-<v-dialog width="500" v-model="show">
-      <v-btn slot="activator" icon><v-icon>add</v-icon></v-btn>
-      <v-card max-width="500px"> 
-        <v-toolbar  color="" drak>
-          <v-toolbar-title color= drak> 
+  <v-layout>
+    <v-dialog width="500" v-model="show">
+      <v-btn slot="activator" round flat>
+        <v-icon>add</v-icon>
+        add subtask
+      </v-btn>
+      <v-card max-width="500px">
+        <v-toolbar color="" drak>
+          <v-toolbar-title color=d rak>
             <v-icon>create_new_folder</v-icon>
-            <content v-if="taskId == null"> Create Task</content>
+            <content v-if="!parentTask"> Create Task</content>
             <content v-else>Create Subtask</content>
           </v-toolbar-title>
           <v-spacer></v-spacer>
         </v-toolbar>
-              <v-form>
-              
-                <v-text-field 
-                prepend-icon="layers"
-                v-model="input.name"
-                :rules="[rules.required]"
-                label="Task Name" 
-                type="text"
-                >
-             </v-text-field> 
-              <v-text-field 
-                prepend-icon="comment"
-                v-model="input.description"
-                label="Description" 
-                type="text"
-                >
-             </v-text-field>
-                   <v-text-field 
-                prepend-icon="comment"
-                v-model="input.estimatedCost"
-                label="Estimate Cost" 
-                type="text"
-                >
-             </v-text-field>
-                   <v-text-field 
-                prepend-icon="comment"
-                v-model="input.priority"
-                label="Priority" 
-                type="text"
-                >
-             </v-text-field> 
-                   <!-- <v-text-field 
-                prepend-icon="comment"
-                v-model="input.description"
-                label="Description" 
-                type="text"
-                >
-             </v-text-field> --> 
-
-          </v-form>
-
-              <v-card-actions>
-                  <v-spacer></v-spacer>
-                  <v-btn @click="create()">Create</v-btn>
-                  <v-spacer></v-spacer>
-               </v-card-actions>
-        </v-card>
-
-        
-
-   </v-dialog>
-
-</v-layout>
+        <v-card-text>
+          <v-text-field prepend-icon="layers" v-model="input.name" :rules="[rules.required]" label="Task Name*" type="text">
+          </v-text-field>
+          <v-text-field prepend-icon="comment" v-model="input.description" label="Description" type="text">
+          </v-text-field>
+          <v-text-field prepend-icon="comment" v-model="input.estimatedCost" label="Estimate Cost" type="number">
+          </v-text-field>
+          <v-text-field prepend-icon="comment" v-model="input.priority" label="Priority" type="number">
+          </v-text-field>
+          <div v-if="error" class="error"> {{error}} </div>
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn @click="create" round>Create</v-btn>
+          <v-spacer></v-spacer>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+  </v-layout>
 </template>
 
 <script>
-import TaskService from '@/services/taskService'
-import ProjectService from '@/services/projectService'
-
-
-export default {
-  props:['taskId'],
-  data() {
-    return {
-      project:{},
-      show: false,
-      parent: null, 
-      input: {
-        name: '',
-        description: '',
-        estimatedCost:null,
-        priority:null,
-        projectId: null,
-        parentId:null
-      },
-      rules: {
-        required: value => !!value || "Required."   
+  import TaskService from "@/services/taskService"
+  import ProjectService from "@/services/projectService"
+  import {mapState} from 'vuex'
+  export default {
+    props: {
+      parentTask: {
+        type: Number,
+        required: true
       }
-    };
-  },
-
-
-
-
-
-  methods :{
-    async create(){
-      try{
-       
-        for (let key in this.rules){
-          if (this.rules[key] === true){
-            if (key == 'required'){
-              this.error = 'require data'
-            }
-            else {
-              this.error = this.rules[key]
-            }
-          }
-        }
-        if(this.input.name != ''){
-          if (this.taskId != null) {
-              this.input.parentId = this.taskId
-          }
-            this.input.projectId = this.project.id
-          
-            await TaskService.create(this.input)
-            this.show = false
-            this.input.name = ''
-            this.input.description = ''
-            this.input.estimatedCost=null
-            this.input.priority=null
-            
-        }
-      } catch (error) {
-          //console.log(error)
-           //this.error = error.response.data.error
-           this.error = error
-          }
-    }
-  },
-    async mounted() {
-         const id = this.$store.state.route.params.id
-         this.project = (await ProjectService.findOne(id)).data
     },
-};
+    data() {
+      return {
+        show: false,
+        input: {},
+        rules: {
+          required: value => !!value || "Required."
+        },
+        error: ''
+      }
+    },
+    computed: {
+      ...mapState([
+        'route'
+      ])
+    },
+    methods: {
+      async create() {
+        try {
+          if (this.rules['required'](this.input.name) == 'Required.'){
+            this.error = 'Require Data'
+            return
+          }
+          this.input.projectId = this.route.params.id
+          this.input.parent = this.parentTask
+          console.log(this.input.parent)
+          await TaskService.create(this.input)
+          this.show = false
+          this.input = {}
+          this.error = ''
+        } catch (error) {
+          this.error = error
+        }
+      }
+    },
+  }
 </script>
 
 <style scoped>
-small:hover {
-  color: #AAA !important
-}
+  small:hover {
+    color: #aaa !important
+  }
 </style>

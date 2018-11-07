@@ -8,10 +8,6 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.STRING,
             allowNull: true
         },
-        tasks: {
-            type: DataTypes.ARRAY(DataTypes.INTEGER),
-            allowNull: false
-        },
         members: {
             type: DataTypes.ARRAY(DataTypes.INTEGER),
             allowNull: false
@@ -20,7 +16,6 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.ENUM('Close', 'Open'),
             allowNull: false
         },
-    
     })
 
     const User = sequelize.import('./user')

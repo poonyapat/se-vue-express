@@ -1,0 +1,46 @@
+.v-dialog__activator {
+    height: 100%;
+}
+
+.v-dialog__container {
+    display: block !important;
+}
+
+.polygon-shape {
+    position: relative !important;
+    border-radius: 10px 5px 5px 10px !important;
+    background: lightgrey;
+    font: 22px Constantia, sans-serif;
+    line-height: 50px;
+    text-align: center;
+    text-decoration: none !important;
+}
+
+.polygon-shape:before,
+.polygon-shape:after {
+    content: '' !important;
+    position: absolute !important;
+    right: -15px;
+    width: 42px !important;
+    height: 15px !important;
+    border-radius: 5px !important;
+    background: lightgrey;
+}
+
+.polygon-shape:before {
+    top: 9px !important;
+    transform: rotate(65deg);
+}
+
+.polygon-shape:after {
+    bottom: 9px;
+    transform: rotate(-65deg);
+}
+
+#app {
+    font-family: 'Avenir', Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-align: center;
+    background-color: #424242;
+}
