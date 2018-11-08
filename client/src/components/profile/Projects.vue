@@ -1,23 +1,17 @@
 <template>
     <v-list expand flat dark>
-        <v-toolbar flat class="secondary">
+        <v-toolbar flat dense class="secondary">
             <v-text-field
                 label="Search"
                 outline
                 append-icon="search"
                 v-model="query"
-            ></v-text-field>
-        
-        
-         
-        <create>
-            <content center>     
-               <v-btn slot="activator" round large><v-icon>add</v-icon>new</v-btn>
-            </content> 
-        </create> 
-      
- 
-
+            ></v-text-field> 
+            <v-spacer></v-spacer>
+            <!-- <v-toolbar-items> -->
+                <project-creator>
+                </project-creator> 
+            <!-- </v-toolbar-items> -->
         </v-toolbar >
 
         <v-pagination
@@ -35,7 +29,7 @@
             v-show="project.name.toLowerCase().includes(query.toLowerCase())"
             avatar
             :class="'my-3 py-3 '+color(project)"
-            @click="navigateTo({name:'projectTabs', params: {id: project.id,name: project.name}})"
+            @click="navigateTo({name:'project', params: {id: project.id}})"
         >
      
             <v-list-tile-content>
@@ -59,7 +53,7 @@
  
 <script>
 import ProjectService from '@/services/projectService'
-import Create from '@/components/CreateProject'
+import ProjectCreator from '@/components/ProjectCreator'
 
 import {mapState} from 'vuex'
 export default {
@@ -77,13 +71,10 @@ export default {
     async mounted() {
         this.projects = (await ProjectService.findAll({
             username: this.username,
-       
         })).data  
   
    
     },
-    // mounted() { this.$router.push({ query: {page: this.page}})
-    // },
     methods: {
         color(project) {
             return project.status === 'Open'? 'cyan': 'grey'
@@ -98,7 +89,7 @@ export default {
         ])
     },
     components :{
-        Create
+        ProjectCreator
     },
     // watch :{ 
     //     '$route.query.page': {

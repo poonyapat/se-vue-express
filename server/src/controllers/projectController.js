@@ -3,7 +3,6 @@ const {Project,User} = require('../models')
 module.exports = {
     async create(req, res) {
         try {
-            req.body.tasks = []
             req.body.members = []
             req.body.status = "Open"
             const project = await Project.create(req.body)
