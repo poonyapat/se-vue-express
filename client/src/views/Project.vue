@@ -1,16 +1,11 @@
 <template>
-  <v-container class="primary" fill-height>
+  <v-container class="secondary" fill-height fluid>
     <v-layout row wrap>
       <v-flex>
-        <v-card>
-          <v-toolbar flat>
-            <v-toolbar-title>{{ project.name }}</v-toolbar-title>
-          </v-toolbar>
-          <v-card-text>
-          {{ project.description }} 
-       
-          </v-card-text>
-        </v-card>
+        <div class="text-xs-left white--text ma-2">
+          <h1> {{project.name}} </h1>
+          <p> {{project.description}} </p>
+        </div>
         <v-tabs
             class="mt-2"
             slot="extension"
@@ -18,7 +13,6 @@
             dark
             grow
           >
-            <!-- <v-tabs-slider color="dark"></v-tabs-slider> -->
             <v-tab
               v-for="item in items"
               :key="item.name"
@@ -34,7 +28,7 @@
                   :id="'tab-' + item.name"
                   :key="item.name"
               >
-                <v-container class="secondary">
+                <v-container class="secondary" fluid>
                   <component :is="item.component" v-bind="properties[item.name]"/>
                 </v-container>
               </v-tab-item> 
@@ -48,7 +42,7 @@
 <script>
 
  import ProjectService from '@/services/projectService'
- import TaskTable from '@/components/project/TaskTable'
+ import TaskTable from '@/components/project/TaskTab'
  import MemberTable from '@/components/project/MemberTable'
  import IssueTable from '@/components/project/IssueTable'
  

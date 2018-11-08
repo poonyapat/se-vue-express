@@ -19,9 +19,9 @@
           </v-text-field>
           <v-text-field prepend-icon="comment" v-model="input.description" label="Description" type="text">
           </v-text-field>
-          <v-text-field prepend-icon="comment" v-model="input.estimatedCost" label="Estimate Cost" type="number">
+          <v-text-field prepend-icon="comment" v-model="input.estimatedCost" label="Estimate Cost" type="number" style="width: 45%; display:inline-block">
           </v-text-field>
-          <v-text-field prepend-icon="comment" v-model="input.priority" label="Priority" type="number">
+          <v-text-field prepend-icon="comment" v-model="input.priority" label="Priority" type="number" style="width: 45%;display:inline-block">
           </v-text-field>
           <div v-if="error" class="error"> {{error}} </div>
         </v-card-text>
@@ -75,6 +75,7 @@
           this.show = false
           this.input = {}
           this.error = ''
+          this.$emit('reload')
         } catch (error) {
           this.error = error
         }
