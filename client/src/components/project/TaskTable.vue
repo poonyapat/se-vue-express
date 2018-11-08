@@ -1,14 +1,16 @@
 <template>
   <v-card>
-    <v-tabs show-arrows v-model="active">
-      <v-tab flat v-for="parent in parents" :href="'#'+parent.id" :key="parent.id" @click="jumpTo(parent.id)">
+    <v-tabs show-arrows v-model="active" color="cyan"
+      slider-color="#FFCF69">
+      <v-tab flat v-for="(parent,index) in parents" :href="'#'+parent.id" :key="parent.id" @click="jumpTo(parent.id)"
+        :style="'background: rgba(255,255,255,'+(index*0.1)+')'">
         {{parent.name}} :
       </v-tab>
     </v-tabs>
     <v-card-text>
       <v-data-table :headers="headers" :items="tasks" item-key="id" hide-actions :rows-per-page-items="[{value: 10}]">
         <template slot="items" slot-scope="props">
-          <tr @click="forward(props.item)" class="text-xs-left">
+          <tr @click="forward(props.item)" class="text-xs-left" :style="'background: '+rowColor(props.item.status)">
             <td>{{ props.item.name }}</td>
             <td>{{ props.item.status }}</td>
             <td>{{ props.item.estimatedCost }}</td>
@@ -67,6 +69,9 @@
             text: 'Actions'
           }
         ],
+        tabColors: [
+          '794DFF', '4D82FF', '4DD5FF', '4DFFBE', 'B2FF4D', 'FFE44D', 'FF974D', 'FF4D4D'
+        ],
         parents: [{
           name: 'Main Tasks',
           id: 0
@@ -105,6 +110,18 @@
           parent: this.parentTask
         })).data
         console.log('Something')
+      },
+      rowColor(status){
+        if (status == 'Done'){
+          return '#78CC88'
+        }
+        else if (status == 'ToDo'){
+          return '#CCCCCC'
+        }
+        else if (status == 'Analyzing'){
+          return '#FFCF69'
+        }
+        return '#A8C8FF'
       }
     },
     async mounted() {
