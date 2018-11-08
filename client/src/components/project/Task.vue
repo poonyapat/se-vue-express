@@ -87,8 +87,6 @@ import TaskService from '@/services/taskService'
 
       
     },
-    method :{
-     
-    }
+  
   }
 </script>

@@ -1,4 +1,4 @@
-const {Project} = require('../models')
+const {Project,User} = require('../models')
 
 module.exports = {
     async create(req, res) {
@@ -51,6 +51,57 @@ module.exports = {
             })
         }
     },
+
+    async addMembers(req, res){
+        try{
+            // if(req.body.user1 != null){ //กันไว้ก่อน ค่อยเอาออก
+                console.log(req.body)
+                const project = await Project.findOne({
+                    where:{
+                        id : req.body.projectId
+                    }
+                })
+                console.log(project)
+                const user1 = await User.findOne({
+                    where :{
+                        username : req.body.user1
+                    }
+                })
+                project.members.push(user1.id) // id  of  user
+                project.update({
+                    members: project.members
+                })
+                // if(req.body.user2 != null){
+                //     const user2 = await User.findOne({
+                //         where :{
+                //             username : req.body.user2
+                //         }
+                //     })
+                //     project.members.push(user2.id) // id  of  user
+                //     project.update({
+                //         members: project.members
+                //     })
+                // }
+                // if(req.body.user3 != null){
+                //     const user3 = await User.findOne({
+                //         where :{
+                //             username : req.body.user3
+                //         }
+                //     })
+                //     project.members.push(user3.id) // id  of  user
+                //     project.update({
+                //         members: project.members
+                //     })
+                // }
+             
+            // }
+        }catch(err){
+            res.status(501).send({
+                // error: 'An error has occured trying to login'
+                error: err
+            })
+        }
+    }
 
   
 }
