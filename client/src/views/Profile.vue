@@ -1,5 +1,5 @@
 <template>
-    <v-container grid-list-lg style="height: 100%">
+    <v-container grid-list-lg style="height: 100%" dark>
         <v-layout row wrap justify-center>
             <v-flex xs12 sm4 md3>
                 <v-card flat dark>
@@ -84,5 +84,4 @@ export default {
 </script>
 
 <style>
-
 </style>

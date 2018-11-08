@@ -23,40 +23,40 @@
 </template>
 
 <script>
-    // import TaskTable from '@/components/project/TaskTable2'
-    // import TaskService from '@/services/taskService'
-    // import TaskCreator from '@/components/TaskCreator'
-    // import {
-    //     mapState
-    // } from 'vuex'
-    // export default {
-    //     name: 'TaskTable',
-    //     data() {
-    //         return {
-    //             tasks: [],
-    //             nSubtask: 0
-    //         }
-    //     },
-    //     props: {
-    //         parentTask: {
-    //             type: Number,
-    //             required: false,
-    //             default: 0
-    //         }
-    //     },
-    //     components: {
-    //         TaskTable, TaskCreator
-    //     },
-    //     computed: {
-    //         ...mapState(['route'])
-    //     },
-    //     async mounted() {
-    //         this.tasks = (await TaskService.findAll({
-    //             projectId: this.route.params.id,
-    //             parent: this.parentTask
-    //         })).data
-    //     }
-    // }
+    import TaskTable from '@/components/project/TaskTable2'
+    import TaskService from '@/services/taskService'
+    import TaskCreator from '@/components/TaskCreator'
+    import {
+        mapState
+    } from 'vuex'
+    export default {
+        name: 'TaskTable',
+        data() {
+            return {
+                tasks: [],
+                nSubtask: 0
+            }
+        },
+        props: {
+            parentTask: {
+                type: Number,
+                required: false,
+                default: 0
+            }
+        },
+        components: {
+            TaskTable, TaskCreator
+        },
+        computed: {
+            ...mapState(['route'])
+        },
+        async mounted() {
+            this.tasks = (await TaskService.findAll({
+                projectId: this.route.params.id,
+                parent: this.parentTask
+            })).data
+        }
+    }
 </script>
 
 <style scoped>

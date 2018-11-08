@@ -1,31 +1,34 @@
 <template>
-  <v-layout>
-    <v-flex xs12>
-      <v-card>
-        <v-tabs show-arrows v-model="active">
-          <v-tab flat v-for="parent in parents" :href="'#'+parent.id" :key="parent.id" @click="jumpTo(parent.id)">
-            {{parent.name}} :
-          </v-tab>
-        </v-tabs>
-        <v-card-text>
-          <v-data-table :headers="headers" :items="tasks" item-key="id" hide-actions :rows-per-page-items="[{value: 10}]">
-            <template slot="items" slot-scope="props">
-              <tr @click="forward(props.item)" class="text-xs-left">
-                <td>{{ props.item.name }}</td>
-                <td>{{ props.item.status }}</td>
-                <td>{{ props.item.estimatedCost }}</td>
-                <td>{{ props.item.priority }}</td>
-              </tr>
-            </template>
-            <template slot="footer">
-              <task-creator :parent-task="parentTask">
-              </task-creator>
-            </template>
-          </v-data-table>
-        </v-card-text>
-      </v-card>
-    </v-flex>
-  </v-layout>
+  <v-card>
+    <v-tabs show-arrows v-model="active" color="cyan"
+      slider-color="#FFCF69">
+      <v-tab flat v-for="(parent,index) in parents" :href="'#'+parent.id" :key="parent.id" @click="jumpTo(parent.id)"
+        :style="'background: rgba(255,255,255,'+(index*0.1)+')'">
+        {{parent.name}} :
+      </v-tab>
+    </v-tabs>
+    <v-card-text>
+      <v-data-table :headers="headers" :items="tasks" item-key="id" hide-actions :rows-per-page-items="[{value: 10}]">
+        <template slot="items" slot-scope="props">
+          <tr @click="forward(props.item)" class="text-xs-left" :style="'background: '+rowColor(props.item.status)">
+            <td>{{ props.item.name }}</td>
+            <td>{{ props.item.status }}</td>
+            <td>{{ props.item.estimatedCost }}</td>
+            <td>{{ props.item.priority }}</td>
+            <td>
+              <v-btn icon @click.stop="$emit('showInfo',props.item)">
+                <v-icon>info</v-icon>
+              </v-btn>
+            </td>
+          </tr>
+        </template>
+        <template slot="footer">
+          <task-creator @reload="loadTask" :parent-task="parentTask">
+          </task-creator>
+        </template>
+      </v-data-table>
+    </v-card-text>
+  </v-card>
 </template>
 
 <script>
@@ -61,7 +64,13 @@
           {
             text: 'Priority',
             value: 'priority'
+          },
+          {
+            text: 'Actions'
           }
+        ],
+        tabColors: [
+          '794DFF', '4D82FF', '4DD5FF', '4DFFBE', 'B2FF4D', 'FFE44D', 'FF974D', 'FF4D4D'
         ],
         parents: [{
           name: 'Main Tasks',
@@ -79,10 +88,12 @@
     methods: {
       forward: function (selectedItem) {
         this.parentTask = selectedItem.id
-        this.parents.push({
-          name: selectedItem.name,
-          id: selectedItem.id
-        })
+        if (this.parents[this.parents.length - 1].id != selectedItem.id) {
+          this.parents.push({
+            name: selectedItem.name,
+            id: selectedItem.id
+          })
+        }
       },
       jumpTo: function (id) {
         for (let i in this.parents) {
@@ -92,6 +103,25 @@
             break
           }
         }
+      },
+      loadTask: async function () {
+        this.tasks = (await TaskService.findAll({
+          projectId: this.project.id,
+          parent: this.parentTask
+        })).data
+        console.log('Something')
+      },
+      rowColor(status){
+        if (status == 'Done'){
+          return '#78CC88'
+        }
+        else if (status == 'ToDo'){
+          return '#CCCCCC'
+        }
+        else if (status == 'Analyzing'){
+          return '#FFCF69'
+        }
+        return '#A8C8FF'
       }
     },
     async mounted() {

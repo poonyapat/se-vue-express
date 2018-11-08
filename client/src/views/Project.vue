@@ -1,44 +1,25 @@
 <template>
-  <v-container class="primary" fill-height>
+  <v-container class="secondary" fill-height fluid>
     <v-layout row wrap>
       <v-flex>
-        <v-card>
-          <v-toolbar flat>
-            <v-toolbar-title>{{ project.name }}</v-toolbar-title>
-          </v-toolbar>
-          <v-card-text>
-          {{ project.description }} 
-       
-          </v-card-text>
-        </v-card>
-        <v-tabs
-            class="mt-2"
-            slot="extension"
-            v-model="tab"
-            dark
-            grow
-          >
-            <!-- <v-tabs-slider color="dark"></v-tabs-slider> -->
-            <v-tab
-              v-for="item in items"
-              :key="item.name"
-            >
-              <v-icon large> {{ item.icon }} </v-icon>
-              {{ item.name }}
-       
-            </v-tab>
+        <div class="text-xs-left white--text ma-2">
+          <h1> {{project.name}} </h1>
+          <p> {{project.description}} </p>
+        </div>
+        <v-tabs class="mt-2" slot="extension" v-model="tab" dark grow>
+          <v-tab v-for="item in items" :key="item.name" class="secondary darken-1">
+            <v-icon large> {{ item.icon }} </v-icon>
+            {{ item.name }}
 
-            <v-tabs-items>
-              <v-tab-item
-                  v-for="item in items"
-                  :id="'tab-' + item.name"
-                  :key="item.name"
-              >
-                <v-container class="secondary">
-                  <component :is="item.component" v-bind="properties[item.name]"/>
-                </v-container>
-              </v-tab-item> 
-            </v-tabs-items>
+          </v-tab>
+
+          <v-tabs-items>
+            <v-tab-item v-for="item in items" :id="'tab-' + item.name" :key="item.name">
+              <v-container class="secondary darken-1" fluid>
+                <component :is="item.component" v-bind="properties[item.name]" />
+              </v-container>
+            </v-tab-item>
+          </v-tabs-items>
         </v-tabs>
       </v-flex>
     </v-layout>
@@ -46,41 +27,59 @@
 </template>
 
 <script>
+  import ProjectService from '@/services/projectService'
+  import TaskTable from '@/components/project/TaskTab'
+  import MemberTable from '@/components/project/MemberTable'
+  import IssueTable from '@/components/project/IssueTable'
 
- import ProjectService from '@/services/projectService'
- import TaskTable from '@/components/project/TaskTable'
- import MemberTable from '@/components/project/MemberTable'
- import IssueTable from '@/components/project/IssueTable'
- 
-export default {
+  export default {
     data() {
-        return {
-            project: {},
-            id:'',
-            items: [
-                {name:'Task', icon: 'assignment',component :'TaskTable'},
-                {name:'Member', icon:'group',component:'MemberTable'},
-                {name:'Issue',icon:'warning',component:'IssueTable'},
-                {name:'...',icon:'',component:''}
-            ],  
-            tab: null
-         }
+      return {
+        project: {},
+        id: '',
+        items: [{
+            name: 'Task',
+            icon: 'assignment',
+            component: 'TaskTable'
+          },
+          {
+            name: 'Member',
+            icon: 'group',
+            component: 'MemberTable'
+          },
+          {
+            name: 'Issue',
+            icon: 'warning',
+            component: 'IssueTable'
+          },
+          {
+            name: '...',
+            icon: '',
+            component: ''
+          }
+        ],
+        tab: null
+      }
     },
     computed: {
-      properties: function(){
+      properties: function () {
         return {
-          'Task': {project: this.project}
+          'Task': {
+            project: this.project
+          }
         }
       }
     },
     components: {
-      TaskTable, MemberTable, IssueTable
+      TaskTable,
+      MemberTable,
+      IssueTable
     },
     async mounted() {
       const id = this.$store.state.route.params.id
       this.project = (await ProjectService.findOne(id)).data
     },
-}
+  }
 </script>
 
 <style>

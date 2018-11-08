@@ -1,5 +1,5 @@
 <template>
-    <v-list expand flat dark>
+    <v-list expand flat dark class="text-xs-center">
         <v-toolbar flat dense class="secondary">
             <v-text-field
                 label="Search"
