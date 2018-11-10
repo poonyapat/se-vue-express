@@ -4,8 +4,8 @@ export default {
     create(projectData) {
         return Api().post('project/create', projectData)
     },
-    addMembers(members){
-        return Api().post('project/addMembers',members)
+    addMember(members){
+        return Api().post('project/addMember',members)
     },
     findAll(queryObject) {
         return Api().get('projects', {

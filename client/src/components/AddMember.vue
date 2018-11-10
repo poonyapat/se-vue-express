@@ -53,7 +53,7 @@
 <script>
 import ProjectService from '@/services/projectService'
 export default {
-    props:['projId'],
+
     data(){
         return{
             input:{
@@ -90,7 +90,7 @@ export default {
         }
       } catch (error) {
            this.error = error
-          }
+        }
         }
     }
 }

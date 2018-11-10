@@ -9,7 +9,7 @@ module.exports = (sequelize, DataTypes) => {
             allowNull: true
         },
         members: {
-            type: DataTypes.ARRAY(DataTypes.INTEGER),
+            type: DataTypes.ARRAY(DataTypes.STRING),          
             allowNull: false
         },
         status: {
