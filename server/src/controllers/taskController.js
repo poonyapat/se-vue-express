@@ -11,14 +11,14 @@
                  task: task
              })
          } catch (err) {
-            res.status(500).send({
-                error: err
-            })
+             res.status(500).send({
+                 error: err
+             })
          }
      },
 
      async findAll(req, res) {
-        console.log(req.body)
+         console.log(req.body)
          try {
              if (!req.query.parent && req.query.parent != 0) {
                  res.status(403).send('Invalid Parent Tasks')
@@ -52,4 +52,25 @@
              })
          }
      },
+
+     async update(req, res) {
+         try {
+             const task = await Task.findOne({
+                 where: {
+                     id: req.body.id
+                 }
+             })
+             if (!task) {
+                 res.status(404).send({
+                     error: 'Task is not found'
+                 })
+             }
+             await task.update(req.body.data)
+             res.send(task)
+         } catch (error) {
+             res.status(500).send({
+                 error: error
+             })
+         }
+     }
  }

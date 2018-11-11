@@ -39,4 +39,6 @@ module.exports = (app) => {
     app.get('/task',
         TaskController.findOne)
     
+    app.post('/task/update',
+        TaskController.update)
 }

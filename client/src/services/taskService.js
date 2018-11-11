@@ -13,5 +13,11 @@ export default {
         return Api().get('task', {
             params: { id: id }
         })
+    },
+    update(id, data) {
+        return Api().post('task/update', {
+            id: id,
+            data: data
+        })
     }
 }

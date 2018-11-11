@@ -35,7 +35,6 @@
 
 <script>
   import TaskService from "@/services/taskService"
-  import ProjectService from "@/services/projectService"
   import {
     mapState
   } from 'vuex'
@@ -70,7 +69,6 @@
           }
           this.input.projectId = this.route.params.id
           this.input.parent = this.parentTask
-          console.log(this.input.parent)
           await TaskService.create(this.input)
           this.show = false
           this.input = {}

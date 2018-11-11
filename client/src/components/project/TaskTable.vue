@@ -1,7 +1,6 @@
 <template>
   <v-card>
-    <v-tabs show-arrows v-model="active" color="cyan"
-      slider-color="#FFCF69">
+    <v-tabs show-arrows v-model="active" color="cyan" slider-color="#FFCF69">
       <v-tab flat v-for="(parent,index) in parents" :href="'#'+parent.id" :key="parent.id" @click="jumpTo(parent.id)"
         :style="'background: rgba(255,255,255,'+(index*0.1)+')'">
         {{parent.name}} :
@@ -12,18 +11,27 @@
         <template slot="items" slot-scope="props">
           <tr @click="forward(props.item)" class="text-xs-left" :style="'background: '+rowColor(props.item.status)">
             <td>{{ props.item.name }}</td>
-            <td>{{ props.item.status }}</td>
-            <td>{{ props.item.estimatedCost }}</td>
-            <td>{{ props.item.priority }}</td>
-            <td>
-              <v-btn icon @click.stop="$emit('showInfo',props.item)">
+            <td class="text-xs-center">{{ props.item.status }}</td>
+            <td class="text-xs-center">{{ props.item.estimatedCost }}</td>
+            <td class="text-xs-center">{{ props.item.priority }}</td>
+            <td class="text-xs-center">
+              <v-tooltip bottom v-if="props.item.description">
+                <v-btn icon @click.stop="$emit('showInfo',props.item)" slot="activator">
+                  <v-icon>info</v-icon>
+                </v-btn>
+                {{props.item.description}}
+              </v-tooltip>
+              <v-btn icon @click.stop="$emit('showInfo',props.item)" v-else>
                 <v-icon>info</v-icon>
+              </v-btn>
+              <v-btn icon @click.stop="remove(props.item)">
+                <v-icon>delete</v-icon>
               </v-btn>
             </td>
           </tr>
         </template>
         <template slot="footer">
-          <task-creator @reload="loadTask" :parent-task="parentTask">
+          <task-creator @reload="$emit('loadTask')" :parent-task="parentTask">
           </task-creator>
         </template>
       </v-data-table>
@@ -33,21 +41,12 @@
 
 <script>
   import TaskCreator from '@/components/TaskCreator'
-  import TaskTable from '@/components/project/TaskTable2'
-  import TaskService from '@/services/taskService'
-  import {
-    mapState
-  } from 'vuex'
   export default {
-    name: 'task-table',
     components: {
-      TaskCreator,
-      TaskTable
+      TaskCreator
     },
     data() {
       return {
-        parentTask: 0,
-        tasks: [],
         active: null,
         headers: [{
             text: 'Task',
@@ -55,18 +54,24 @@
           },
           {
             text: 'Status',
-            value: 'status'
+            value: 'status',
+            align: 'center'
           },
           {
             text: 'Estimate Cost',
-            value: 'estimatedCost'
+            value: 'estimatedCost',
+            align: 'center'
           },
           {
             text: 'Priority',
-            value: 'priority'
+            value: 'priority',
+            align: 'center'
           },
           {
-            text: 'Actions'
+            text: 'Actions',
+            value: false,
+            sortable: false,
+            align: 'center'
           }
         ],
         tabColors: [
@@ -79,15 +84,18 @@
       }
     },
     props: {
-      project: {
-        type: Object,
-        default: {},
+      tasks: {
+        type: Array,
         required: true
       },
+      parentTask: {
+        type: Number,
+        required: true
+      }
     },
     methods: {
       forward: function (selectedItem) {
-        this.parentTask = selectedItem.id
+        this.$emit('setParent', selectedItem.id)
         if (this.parents[this.parents.length - 1].id != selectedItem.id) {
           this.parents.push({
             name: selectedItem.name,
@@ -98,54 +106,27 @@
       jumpTo: function (id) {
         for (let i in this.parents) {
           if (this.parents[i].id === id) {
-            this.parentTask = this.parents[i].id
+            this.$emit('setParent', this.parents[i].id)
             this.parents = this.parents.splice(0, parseInt(i) + 1)
             break
           }
         }
       },
-      loadTask: async function () {
-        this.tasks = (await TaskService.findAll({
-          projectId: this.project.id,
-          parent: this.parentTask
-        })).data
-        console.log('Something')
-      },
-      rowColor(status){
-        if (status == 'Done'){
+      rowColor(status) {
+        if (status == 'Done') {
           return '#78CC88'
-        }
-        else if (status == 'ToDo'){
+        } else if (status == 'ToDo') {
           return '#CCCCCC'
-        }
-        else if (status == 'Analyzing'){
+        } else if (status == 'Analyzing') {
           return '#FFCF69'
         }
         return '#A8C8FF'
       }
     },
-    async mounted() {
-      if (this.project.id) {
-        this.tasks = (await TaskService.findAll({
-          projectId: this.project.id,
-          parent: 0
-        })).data
-      }
-    },
+
     watch: {
-      project: async function (value) {
-        this.tasks = (await TaskService.findAll({
-          projectId: this.project.id,
-          parent: 0
-        })).data
-      },
-      parentTask: async function (value) {
-        this.parentTask = parseInt(value)
-        this.tasks = (await TaskService.findAll({
-          projectId: this.project.id,
-          parent: value
-        })).data
-        this.active = this.parentTask + ''
+      parentTask: function (value) {
+        this.active = value + ''
       }
     }
   }
