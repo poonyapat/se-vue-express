@@ -31,6 +31,11 @@ module.exports = {
                 error: errorMsg
             })
         } else {
+            if (!req.body.username || !req.body.password || !req.body.email || !req.body.phoneNumber) {
+                res.status(400).send({
+                    error: "Require more information"
+                })
+            }
             next()
         }
     }

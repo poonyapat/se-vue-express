@@ -12,14 +12,13 @@ function jwtSignUser(user) {
 module.exports = {
     async register(req, res) {
         try {
-            req.body.projects = []
             req.body.skills = {}
             const user = await User.create(req.body)
             res.send(user.toJSON())
         } catch (err) {
             res.status(400).send({
-                // error: 'This account is already exist'
-                error: err
+                error: 'This account is already exist'
+                // error: err
             })
         }
     },
