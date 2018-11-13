@@ -26,7 +26,10 @@
             </v-card-text>
             <v-card-actions>
                 <v-spacer></v-spacer>
-                <v-btn @click="save">Save</v-btn>
+                <confirm-dialog @confirm="save" :title="confirm.save.title" :text="confirm.save.text">
+                    <v-btn>Save</v-btn>
+                </confirm-dialog>
+                <v-spacer></v-spacer>
             </v-card-actions>
         </template>
         <template v-else>
@@ -37,12 +40,19 @@
 
 <script>
     import TaskService from '@/services/taskService'
+    import ConfirmDialog from '@/components/ConfirmDialog'
     export default {
         data() {
             return {
                 copiedTask: {},
                 taskStatuses: ['ToDo', 'Designing', 'OnGoing', 'Done', 'Analyzing'],
-                members: []
+                members: [],
+                confirm: {
+                    save: {
+                        title: 'Modification Effect',
+                        text: 'This modification may affect to its sub task, Please confirm to save it'
+                    }
+                }
             }
         },
         props: {
@@ -61,9 +71,11 @@
                 Object.assign(this.copiedTask, this.task)
             }
         },
+        components: {
+            ConfirmDialog
+        },
         methods: {
             save: async function () {
-                console.log(5555)
                 await TaskService.update(this.copiedTask.id, (({
                     name,
                     description,
@@ -80,9 +92,7 @@
                     username
                 }))(this.copiedTask))
 
-                console.log(666)
                 this.$emit('reload')
-                console.log(5555)
             }
         },
     }

@@ -2,7 +2,7 @@
     <v-container fluid grid-list-lg>
         <v-layout justify-center row wrap>
             <v-flex lg8 md12 sm12>
-                <task-table @setParent="setParent" @showInfo="showInfo" @load-task="loadTask" :tasks="tasks" :parent-task="parentTask"></task-table>
+                <task-table @setParent="setParent" @showInfo="showInfo" @reload="loadTask" :tasks="tasks" :parent-task="parentTask"></task-table>
             </v-flex>
             <v-flex lg4 md12 sm12>
                 <task-info @reset="selectedTask = {}" @reload="loadTask" :task="selectedTask"></task-info>
@@ -20,7 +20,6 @@
             return {
                 parentTask: 0,
                 tasks: [],
-                show: false,
                 selectedTask: {}
             }
         },
@@ -36,16 +35,18 @@
         },
         methods: {
             showInfo: function (selectedTask) {
-                this.show = true
+                if (selectedTask.id == 0){
+                    console.log(555)
+                    this.selectedTask = {}
+                    return
+                }
                 this.selectedTask = selectedTask
             },
             loadTask: async function () {
-                console.log(555)
                 this.tasks = (await TaskService.findAll({
                     projectId: this.project.id,
                     parent: this.parentTask
                 })).data
-                console.log(this.tasks)
             },
             setParent: function(newParent){
                 this.parentTask = newParent

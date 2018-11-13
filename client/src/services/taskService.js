@@ -19,5 +19,10 @@ export default {
             id: id,
             data: data
         })
+    },
+    remove(id) {
+        return Api().post('task/delete', {
+            id: id
+        })
     }
 }

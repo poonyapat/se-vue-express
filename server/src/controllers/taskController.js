@@ -72,5 +72,20 @@
                  error: error
              })
          }
+     },
+     async delete(req, res) {
+         try {
+             const task = await Task.findOne({
+                 where: req.body
+             })
+             task.destroy()
+             res.send({
+                 msg: 'Process Complete'
+             })
+         } catch (error) {
+             res.status(500).send({
+                 error: error
+             })
+         }
      }
  }

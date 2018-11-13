@@ -1,7 +1,7 @@
 <template>
   <v-card>
     <v-tabs show-arrows v-model="active" color="cyan" slider-color="#FFCF69">
-      <v-tab flat v-for="(parent,index) in parents" :href="'#'+parent.id" :key="parent.id" @click="jumpTo(parent.id)"
+      <v-tab flat v-for="(parent,index) in parents" :href="'#'+parent.id" :key="parent.id" @click="jumpTo(parent)"
         :style="'background: rgba(255,255,255,'+(index*0.1)+')'">
         {{parent.name}} :
       </v-tab>
@@ -15,6 +15,9 @@
             <td class="text-xs-center">{{ props.item.estimatedCost }}</td>
             <td class="text-xs-center">{{ props.item.priority }}</td>
             <td class="text-xs-center">
+              <!-- <v-btn icon @click.stop="forward(props.item)">
+                <v-icon>arrow_forward_ios</v-icon>
+              </v-btn> -->
               <v-tooltip bottom v-if="props.item.description">
                 <v-btn icon @click.stop="$emit('showInfo',props.item)" slot="activator">
                   <v-icon>info</v-icon>
@@ -24,14 +27,17 @@
               <v-btn icon @click.stop="$emit('showInfo',props.item)" v-else>
                 <v-icon>info</v-icon>
               </v-btn>
-              <v-btn icon @click.stop="remove(props.item)">
-                <v-icon>delete</v-icon>
-              </v-btn>
+              <confirm-dialog @confirm="remove(props.item.id)" :title="confirm.deletion.title" :text="confirm.deletion.text"
+                v-model="show.delete">
+                <v-btn icon>
+                  <v-icon>delete</v-icon>
+                </v-btn>
+              </confirm-dialog>
             </td>
           </tr>
         </template>
         <template slot="footer">
-          <task-creator @reload="$emit('loadTask')" :parent-task="parentTask">
+          <task-creator @reload="$emit('reload')" :parent-task="parentTask">
           </task-creator>
         </template>
       </v-data-table>
@@ -41,13 +47,20 @@
 
 <script>
   import TaskCreator from '@/components/TaskCreator'
+  import TaskService from '@/services/taskService'
+  import ConfirmDialog from '@/components/ConfirmDialog'
   export default {
     components: {
-      TaskCreator
+      TaskCreator,
+      ConfirmDialog
     },
     data() {
       return {
         active: null,
+        show: {
+          delete: false,
+          menu: []
+        },
         headers: [{
             text: 'Task',
             value: 'name'
@@ -80,7 +93,13 @@
         parents: [{
           name: 'Main Tasks',
           id: 0
-        }]
+        }],
+        confirm: {
+          deletion: {
+            title: 'Confirm Deletion',
+            text: 'Please check its sub tasks, this deletion will affect to them'
+          }
+        }
       }
     },
     props: {
@@ -102,25 +121,31 @@
             id: selectedItem.id
           })
         }
+        this.$emit('showInfo', selectedItem)
       },
-      jumpTo: function (id) {
+      jumpTo: function (parent) {
         for (let i in this.parents) {
-          if (this.parents[i].id === id) {
+          if (this.parents[i].id === parent.id) {
             this.$emit('setParent', this.parents[i].id)
-            this.parents = this.parents.splice(0, parseInt(i) + 1)
+            this.parents = this.parents.splice(0, parseInt(parent.id) + 1)
             break
           }
         }
+        this.$emit('showInfo', parent)
       },
       rowColor(status) {
         if (status == 'Done') {
           return '#78CC88'
         } else if (status == 'ToDo') {
-          return '#CCCCCC'
+          return '#DDDDDD'
         } else if (status == 'Analyzing') {
           return '#FFCF69'
         }
         return '#A8C8FF'
+      },
+      async remove(id) {
+        await TaskService.remove(id)
+        this.$emit('reload')
       }
     },
 

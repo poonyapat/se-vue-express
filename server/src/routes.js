@@ -41,4 +41,7 @@ module.exports = (app) => {
     
     app.post('/task/update',
         TaskController.update)
+    
+    app.post('/task/delete',
+        TaskController.delete)
 }

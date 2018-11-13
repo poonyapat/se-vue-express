@@ -13,3 +13,7 @@
 .transparent {
     background: transparent !important;
 }
+
+.inline-block {
+    display: inline-block !important;
+}

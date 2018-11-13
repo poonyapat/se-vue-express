@@ -2,7 +2,7 @@ module.exports = {
     port: process.env.PORT || '8081',
     db: {
         database: process.env.DB_NAME || 'se_project',
-        user: process.env.DB_USER || 'postgres',
+        user: process.env.DB_USER || 'poony',
         password: process.env.DB_PASSWORD || 'password',
         options: {
             dialect: process.env.DIALECT || 'postgres',
