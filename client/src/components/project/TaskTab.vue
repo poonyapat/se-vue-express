@@ -36,7 +36,6 @@
         methods: {
             showInfo: function (selectedTask) {
                 if (selectedTask.id == 0){
-                    console.log(555)
                     this.selectedTask = {}
                     return
                 }

@@ -18,12 +18,10 @@
      },
 
      async findAll(req, res) {
-         console.log(req.body)
          try {
              if (!req.query.parent && req.query.parent != 0) {
                  res.status(403).send('Invalid Parent Tasks')
              }
-             console.log(req.query)
              const tasks = await Task.findAll({
                  where: req.query
              })
