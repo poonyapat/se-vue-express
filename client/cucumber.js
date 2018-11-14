@@ -8,6 +8,3 @@ require('babel-register')({
       ]
 })
 
-// module.exports = {
-//     default: `--format-options '{"snippetInterface": "asynchronous"}'`
-//   }

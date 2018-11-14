@@ -8,8 +8,12 @@
   >
     <template slot="items" slot-scope="props">
       <td>{{ props.item}}</td>
-     
+      <td  class="text-xs-right">
+                   <v-btn icon v-if="project.username == username"><v-icon>cancel</v-icon></v-btn>
+      </td>
+      
     </template>
+    
   </v-data-table>
         <v-form>
             <v-container>
@@ -27,6 +31,7 @@
 
 <script>
     import ProjectService from '@/services/projectService'
+    import {mapState} from 'vuex'
     export default {
         data() {
             return {
@@ -48,6 +53,11 @@
 
             }
         },
+        computed: {
+                ...mapState([
+                'username',
+                ])
+        },
    
         async mounted() {
             const id = this.$store.state.route.params.id
@@ -61,11 +71,14 @@
                                 this.input.projectId = this.project.id;
                                 await ProjectService.addMember(this.input); 
                                 this.input.user = '';
+                    
+                              //  this.mounted(); 
                             }
                         } catch (error) {
                             this.error = error;
-                            }
+                        }
             },
+        
           
         }
     }
