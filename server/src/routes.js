@@ -23,6 +23,9 @@ module.exports = (app) => {
     
     app.post('/project/addMember',
         ProjectController.addMember)
+
+    app.post('/project/removeMember',
+        ProjectController.removeMember)       
     
     app.get('/projects',
         ProjectController.findAll)

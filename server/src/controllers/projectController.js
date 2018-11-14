@@ -101,7 +101,46 @@
                  error: err
              })
          }
-     }
+     },
+
+
+     async removeMember(req, res) {
+        try{
+            console.log(req.body)
+            const project = await Project.findOne({
+                where: {
+                    id: req.body.projectId
+                }
+            })
+            console.log(req.body)
+            username = req.body.user;
+            var i;
+            var fact = false;
+            for(i = 0; i< project.members.length; i++){
+               if(username == project.members[i]){
+                       fact = true;
+               }
+            }
+            if(fact == true){
+                        project.members.pop(username) // id  of  user
+                        project.update({
+                            members: project.members
+                        })
+            }
+            else{
+                console.log("Not match")
+            }
+
+
+        }catch(err) {
+            res.status(501).send({
+                // error: 'An error has occured trying to login'
+                error: err
+            })
+        }
+    
+    
+    }
 
 
  }
