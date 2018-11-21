@@ -6,7 +6,7 @@
             </v-toolbar-title>
             <v-spacer></v-spacer>
             <v-toolbar-items>
-                <v-btn icon @click="$emit('reset')" v-if="Object.keys(copiedTask).length">
+                <v-btn icon @click="$emit('reset')" v-if="Object.keys(copiedTask).length > 2">
                     <v-icon>
                         close
                     </v-icon>
@@ -14,7 +14,7 @@
             </v-toolbar-items>
         </v-toolbar>
         <v-divider></v-divider>
-        <template v-if="Object.keys(copiedTask).length">
+        <template v-if="Object.keys(copiedTask).length > 2">
             <v-card-text>
                 <v-text-field v-model="copiedTask.name" label="Task name"></v-text-field>
                 <v-textarea v-model="copiedTask.description" label="Description"></v-textarea>
@@ -45,12 +45,12 @@
         data() {
             return {
                 copiedTask: {},
-                taskStatuses: ['ToDo', 'Designing', 'OnGoing', 'Done', 'Analyzing'],
+                taskStatuses: ['ToDo', 'Designing', 'OnGoing', 'Done'],
                 members: [],
                 confirm: {
                     save: {
                         title: 'Modification Effect',
-                        text: 'This modification may affect to its sub task, Please confirm to save it'
+                        text: 'This modification may affect to its sub task if you modify its status,<br> Please confirm to save it'
                     }
                 }
             }
@@ -67,7 +67,7 @@
         },
         watch: {
             task: function () {
-                this.copiedTask = {}
+                this.copiedTask = {status: ''}
                 Object.assign(this.copiedTask, this.task)
             }
         },
@@ -91,7 +91,6 @@
                     priority,
                     username
                 }))(this.copiedTask))
-
                 this.$emit('reload')
             }
         },

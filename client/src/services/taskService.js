@@ -9,7 +9,7 @@ export default {
             params: queryObject
         })
     },
-    fineOne(id){
+    findOne(id){
         return Api().get('task', {
             params: { id: id }
         })

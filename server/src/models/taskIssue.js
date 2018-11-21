@@ -7,9 +7,8 @@ module.exports = (sequelize, DataTypes) => {
     })
 
     const User = sequelize.import('./user')
-    TaskIssue.belongsTo(User, { foreignKey: { primaryKey: true, name: 'username' } })
+    TaskIssue.belongsTo(User, { foreignKey: 'reporterUsername' })
     const Task = sequelize.import('./task')
-    TaskIssue.belongsTo(Task, { foreignKey: { primaryKey: true, name: 'taskId' } })
-    TaskIssue.removeAttribute('id')
+    TaskIssue.belongsTo(Task, { foreignKey: 'taskId'})
     return TaskIssue
 }

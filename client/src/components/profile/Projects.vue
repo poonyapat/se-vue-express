@@ -100,7 +100,6 @@ export default {
     //             this.projects = temp.rows;
     //             this.maxPage = Math.ceil(temp.count/10)
     //            // this.loaded = true
-    //             console.log(this.projects.length)
     //         }
     //     },
 

@@ -11,12 +11,13 @@
                     <v-icon @click="dialog = false">close</v-icon>
                 </v-btn>
             </v-toolbar>
-            <v-card-text v-html="text">
+            <v-card-text>
+                <div v-html="text"></div>
+                <v-text-field v-if="textField" :label="label" @input="input"></v-text-field>
             </v-card-text>
             <v-card-actions>
                 <v-spacer></v-spacer>
                 <v-btn round class="primary" @click="$emit('confirm');dialog=false">Confirm</v-btn>
-                <v-btn round class="error" v-if="cancellable" @click="$emit('cancel');dialog=false">Cancel</v-btn>
                 <v-spacer></v-spacer>
             </v-card-actions>
         </v-card>
@@ -26,21 +27,21 @@
 <script>
     export default {
         props: {
-            cancellable: {
-                type: Boolean,
-                default: false
-            },
-            text: {
-                type: String,
-                require: true
-            },
-            title: String
+            title: String,
+            text: String,
+            textField: Boolean,
+            label: String,
         },
         data() {
             return {
                 dialog: false
             }
         },
+        methods: {
+            input(value) {
+                this.$emit('input', value)
+            }
+        }
     }
 </script>
 

@@ -15,25 +15,37 @@
             <td class="text-xs-center">{{ props.item.estimatedCost }}</td>
             <td class="text-xs-center">{{ props.item.priority }}</td>
             <td class="text-xs-center">
-              <!-- <v-btn icon @click.stop="forward(props.item)">
-                <v-icon>arrow_forward_ios</v-icon>
-              </v-btn> -->
               <v-tooltip bottom v-if="props.item.description">
                 <v-btn icon @click.stop="$emit('showInfo',props.item)" slot="activator">
                   <v-icon>info</v-icon>
                 </v-btn>
-                {{props.item.description}}
+                Show Information
               </v-tooltip>
               <v-btn icon @click.stop="$emit('showInfo',props.item)" v-else>
                 <v-icon>info</v-icon>
               </v-btn>
-              <confirm-dialog @confirm="remove(props.item.id)" :title="confirm.deletion.title" :text="confirm.deletion.text"
-                v-model="show.delete">
-                <v-btn icon>
-                  <v-icon>delete</v-icon>
-                </v-btn>
+              <question-dialog @confirm="reportIssue(props.item.id)" :title="confirm.issue.title" text-field v-model="confirm.issue.description"
+                :text="confirm.issue.text" :label="confirm.issue.label">
+                <v-tooltip bottom>
+                  Report Issue
+                  <v-btn icon slot="activator">
+                    <v-badge right overlap>
+                      <span slot="badge" v-if="taskIssueCount[props.item.id]"> {{taskIssueCount[props.item.id]}} </span>
+                      <v-icon>warning</v-icon>
+                    </v-badge>
+                  </v-btn>
+                </v-tooltip>
+              </question-dialog>
+              <confirm-dialog @confirm="remove(props.item.id)" :title="confirm.deletion.title" :text="confirm.deletion.text">
+                <v-tooltip bottom>
+                  Permanently Delete
+                  <v-btn icon slot="activator">
+                    <v-icon>delete</v-icon>
+                  </v-btn>
+                </v-tooltip>
               </confirm-dialog>
             </td>
+
           </tr>
         </template>
         <template slot="footer">
@@ -49,18 +61,18 @@
   import TaskCreator from '@/components/TaskCreator'
   import TaskService from '@/services/taskService'
   import ConfirmDialog from '@/components/ConfirmDialog'
+  import QuestionDialog from '@/components/QuestionDialog'
+  import TaskIssueService from '@/services/taskIssueService.1'
+  import {mapState} from 'vuex'
   export default {
     components: {
       TaskCreator,
-      ConfirmDialog
+      ConfirmDialog,
+      QuestionDialog
     },
     data() {
       return {
         active: null,
-        show: {
-          delete: false,
-          menu: []
-        },
         headers: [{
             text: 'Task',
             value: 'name'
@@ -87,9 +99,6 @@
             align: 'center'
           }
         ],
-        tabColors: [
-          '794DFF', '4D82FF', '4DD5FF', '4DFFBE', 'B2FF4D', 'FFE44D', 'FF974D', 'FF4D4D'
-        ],
         parents: [{
           name: 'Main Tasks',
           id: 0
@@ -98,6 +107,12 @@
           deletion: {
             title: 'Confirm Deletion',
             text: 'Please check its sub tasks, this deletion will affect to them'
+          },
+          issue: {
+            title: 'Confirm Report Task as Issue',
+            text: 'This reportation will mark this task as an issue,<br> Please write issue description and confirm to report this task',
+            description: '',
+            label: 'Issue Description'
           }
         }
       }
@@ -110,6 +125,10 @@
       parentTask: {
         type: Number,
         required: true
+      },
+      issueCount: {
+        type: Array,
+        default: []
       }
     },
     methods: {
@@ -123,7 +142,7 @@
         }
         this.$emit('showInfo', selectedItem)
       },
-      jumpTo: function (parent) {
+      jumpTo: async function (parent) {
         for (let i in this.parents) {
           if (this.parents[i].id === parent.id) {
             this.$emit('setParent', this.parents[i].id)
@@ -131,28 +150,48 @@
             break
           }
         }
-        this.$emit('showInfo', parent)
+        let task = (await TaskService.findOne(parent.id)).data
+        if (parent.id == 0)
+          task = {}
+        this.$emit('showInfo', task)
       },
       rowColor(status) {
         if (status == 'Done') {
           return '#78CC88'
         } else if (status == 'ToDo') {
           return '#DDDDDD'
-        } else if (status == 'Analyzing') {
-          return '#FFCF69'
+        } else if (status == 'OnGoing') {
+          return '#AACCFF'
         }
-        return '#A8C8FF'
+        return '#A8AAFF'
       },
       async remove(id) {
         await TaskService.remove(id)
         this.$emit('reload')
+      },
+      async reportIssue(id) {
+        console.log(id, this.confirm.issue.description)
+        await TaskIssueService.create({
+          description: this.confirm.issue.description,
+          reporterUsername: this.username,
+          taskId: id
+        })
+        this.$emit('reloadIssue')
       }
     },
 
     watch: {
       parentTask: function (value) {
         this.active = value + ''
-      }
+      },
+    },
+    computed: {
+      taskIssueCount(){
+        const issueCount = {}
+        this.issueCount.map(issue => issueCount[issue.taskId] = issue.issueCount)
+        return issueCount
+      },
+      ...mapState(['username'])
     }
   }
 </script>

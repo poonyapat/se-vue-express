@@ -2,7 +2,7 @@
     <v-container fluid grid-list-lg>
         <v-layout justify-center row wrap>
             <v-flex lg8 md12 sm12>
-                <task-table @setParent="setParent" @showInfo="showInfo" @reload="loadTask" :tasks="tasks" :parent-task="parentTask"></task-table>
+                <task-table @setParent="setParent" @showInfo="showInfo" @reload="loadTask" :tasks="tasks" :issue-count="issueCount" :parent-task="parentTask" @reloadIssue="loadIssue"></task-table>
             </v-flex>
             <v-flex lg4 md12 sm12>
                 <task-info @reset="selectedTask = {}" @reload="loadTask" :task="selectedTask"></task-info>
@@ -14,13 +14,15 @@
 <script>
     import TaskTable from '@/components/project/TaskTable'
     import TaskInfo from '@/components/project/TaskInfo'
+    import TaskIssueService from '@/services/taskIssueService.1'
     import TaskService from '@/services/taskService'
     export default {
         data() {
             return {
                 parentTask: 0,
                 tasks: [],
-                selectedTask: {}
+                selectedTask: {},
+                issueCount: []
             }
         },
         components: {
@@ -46,6 +48,10 @@
                     projectId: this.project.id,
                     parent: this.parentTask
                 })).data
+                this.loadIssue()
+            },
+            loadIssue: async function(){
+                this.issueCount = (await TaskIssueService.countAll(this.tasks.map(task => task.id))).data
             },
             setParent: function(newParent){
                 this.parentTask = newParent
