@@ -114,17 +114,12 @@
             ,
         methods: {
             refresh: async function () {
-                    console.log("refresh")
-                    const id = this.$store.state.route.params.id
-                    this.project = (await ProjectService.findOne(id)).data
-                    console.log(this.project)
-                }
-
-                ,
+                const id = this.$store.state.route.params.id
+                this.project = (await ProjectService.findOne(id)).data
+            },
             async add() {
                     try {
                         if (this.input.user != '') {
-                            console.log("add")
                             this.input.projectId = this.project.id;
                             await ProjectService.addMember(this.input);
                             this.input.user = '';
@@ -133,15 +128,12 @@
                         }
                     } catch (error) {
                         this.msg = true;
-                        console.log("add error ")
-                        console.log(this.msg)
                         this.error = error;
                     }
                 }
 
                 ,
             async remove(memberName) {
-                console.log("removing")
                 this.sender.user = memberName;
                 this.sender.projectId = this.project.id;
                 await ProjectService.removeMember(this.sender);
@@ -149,8 +141,6 @@
             },
             showSnackbar: function (tmp) {
                 this.msg = tmp;
-                // console.log("in showSnackbar")
-                // console.log(this.msg)
             },
 
 

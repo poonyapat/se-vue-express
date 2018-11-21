@@ -15,15 +15,12 @@
             <td class="text-xs-center">{{ props.item.estimatedCost }}</td>
             <td class="text-xs-center">{{ props.item.priority }}</td>
             <td class="text-xs-center">
-              <v-tooltip bottom v-if="props.item.description">
+              <v-tooltip bottom>
                 <v-btn icon @click.stop="$emit('showInfo',props.item)" slot="activator">
                   <v-icon>info</v-icon>
                 </v-btn>
                 Show Information
               </v-tooltip>
-              <v-btn icon @click.stop="$emit('showInfo',props.item)" v-else>
-                <v-icon>info</v-icon>
-              </v-btn>
               <question-dialog @confirm="reportIssue(props.item.id)" :title="confirm.issue.title" text-field v-model="confirm.issue.description"
                 :text="confirm.issue.text" :label="confirm.issue.label">
                 <v-tooltip bottom>
@@ -170,7 +167,6 @@
         this.$emit('reload')
       },
       async reportIssue(id) {
-        console.log(id, this.confirm.issue.description)
         await TaskIssueService.create({
           description: this.confirm.issue.description,
           reporterUsername: this.username,
