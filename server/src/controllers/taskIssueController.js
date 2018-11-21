@@ -40,5 +40,31 @@ module.exports = {
                 error : error
             })
         }
+    },
+    async remove(req, res) {
+        try {
+            const taskIssue = await TaskIssue.findOne({ where: req.body })
+            await taskIssue.destroy()
+            res.send({msg: 'Complete Deletion'})
+        } catch (error) {
+            res.status(500).send({
+                error: error
+            })
+        }
+    },
+    async updateStatus(req, res) {
+        try {
+            const taskIssue = await TaskIssue.findOne({
+                where: {
+                    id: req.body.id
+                }
+            })
+            await taskIssue.update({status: req.body.status})
+            res.send({msg: 'Complete Deletion'})
+        } catch (error) {
+            res.status(500).send({
+                error: error
+            })
+        }
     }
 }

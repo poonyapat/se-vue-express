@@ -4,6 +4,10 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.TEXT,
             allowNull: false
         },
+        status: {
+            type: DataTypes.ENUM('Reported', 'Analyzing', 'Complete', 'Cancelled', 'Ignore'),
+            defaultValue: 'Reported'
+        }
     })
 
     const User = sequelize.import('./user')

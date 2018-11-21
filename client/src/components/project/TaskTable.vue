@@ -60,7 +60,10 @@
   import ConfirmDialog from '@/components/ConfirmDialog'
   import QuestionDialog from '@/components/QuestionDialog'
   import TaskIssueService from '@/services/taskIssueService.1'
-  import {mapState} from 'vuex'
+  import {
+    mapState,
+    mapActions
+  } from 'vuex'
   export default {
     components: {
       TaskCreator,
@@ -125,10 +128,13 @@
       },
       issueCount: {
         type: Array,
-        default: ()=> {return []}
+        default: () => {
+          return []
+        }
       }
     },
     methods: {
+      ...mapActions(['updateUpdater']),
       forward: function (selectedItem) {
         this.$emit('setParent', selectedItem.id)
         if (this.parents[this.parents.length - 1].id != selectedItem.id) {
@@ -170,9 +176,15 @@
         await TaskIssueService.create({
           description: this.confirm.issue.description,
           reporterUsername: this.username,
-          taskId: id
+          taskId: id,
+          projectId: this.route.params.id
         })
         this.$emit('reloadIssue')
+        this.updateUpdater({
+          key: 'issue',
+          value: true
+        })
+        this.confirm.issue.description = ''
       }
     },
 
@@ -182,12 +194,12 @@
       },
     },
     computed: {
-      taskIssueCount(){
+      taskIssueCount() {
         const issueCount = {}
         this.issueCount.map(issue => issueCount[issue.taskId] = issue.issueCount)
         return issueCount
       },
-      ...mapState(['username'])
+      ...mapState(['username', 'route'])
     }
   }
 </script>

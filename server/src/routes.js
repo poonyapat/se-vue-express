@@ -26,8 +26,8 @@ module.exports = (app) => {
         ProjectController.addMember)
 
     app.post('/project/removeMember',
-        ProjectController.removeMember)       
-    
+        ProjectController.removeMember)
+
     app.get('/projects',
         ProjectController.findAll)
 
@@ -58,4 +58,10 @@ module.exports = (app) => {
 
     app.get('/task/issue/count',
         TaskIssueController.countAll)
+
+    app.post('/task/issue/remove',
+        TaskIssueController.remove)
+
+    app.post('/task/issue/updateStatus',
+        TaskIssueController.updateStatus)
 }
