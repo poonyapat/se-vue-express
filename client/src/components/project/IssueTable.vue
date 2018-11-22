@@ -1,9 +1,9 @@
 <template>
     <v-data-table :headers="headers" :items="issues" hide-actions class="elevation-1">
-        <template slot="items" slot-scope="props">
+        <tr slot="items" slot-scope="props">
             <td> {{props.item.taskId}} </td>
             <td> {{props.item.description}} </td>
-            <td> {{props.item.status}} </td>
+            <td :style="'color: '+rowColor(props.item.status)"> {{props.item.status}} </td>
             <td> {{props.item.reporterUsername}} </td>
             <td class="text-xs-right">
                 <v-menu left v-if="props.item.status != 'Cancelled' && props.item.status != 'Complete'">
@@ -11,7 +11,8 @@
                         <v-icon>more_vert</v-icon>
                     </v-btn>
                     <v-list>
-                        <v-list-tile v-if="isActionsShow(props.item.status, action.status)" @click="updateStatus(props.item.id, action.status)" v-for="action in actions" :key="action.status" >
+                        <v-list-tile v-if="isActionsShow(props.item.status, action.status)" @click="updateStatus(props.item.id, action.status)"
+                            v-for="action in actions" :key="action.status">
                             <v-list-tile-title>
                                 <v-icon> {{action.icon}} </v-icon>
                                 {{action.label}}
@@ -20,7 +21,7 @@
                     </v-list>
                 </v-menu>
             </td>
-        </template>
+        </tr>
     </v-data-table>
 
 </template>
@@ -56,6 +57,10 @@
                     status: 'Analyzing',
                     icon: 'play_arrow',
                     label: 'analyzing',
+                },{
+                    status: 'Solving',
+                    icon: 'play_arrow',
+                    label: 'solving',
                 }, {
                     status: 'Complete',
                     icon: 'play_arrow',
@@ -91,15 +96,22 @@
             async updateStatus(id, status) {
                 await TaskIssueService.updateStatus(id, status)
                 this.issues.map(issue => {
-                    if (issue.id == id){
+                    if (issue.id == id) {
                         issue.status = status
                     }
                 })
             },
-            isActionsShow(actualStatus, targetStatus){
+            isActionsShow(actualStatus, targetStatus) {
                 if (actualStatus == 'Ignore' && targetStatus != 'Cancelled') return false
                 if (actualStatus == 'Analyzing' && targetStatus == 'Analyzing') return false
                 return true
+            },
+            rowColor(status) {
+                if (status == 'Ignore') return '#88888888'
+                if (status == 'Cancelled') return '#882222'
+                if (status == 'Complete') return '#228822'
+                if (status == 'Analyzing') return '#F80'
+                return 'black'
             }
         },
         watch: {
