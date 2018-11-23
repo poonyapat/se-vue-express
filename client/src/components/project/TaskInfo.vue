@@ -46,7 +46,6 @@
             return {
                 copiedTask: {},
                 taskStatuses: ['ToDo', 'Designing', 'OnGoing', 'Done'],
-                members: [],
                 confirm: {
                     save: {
                         title: 'Modification Effect',
@@ -60,6 +59,10 @@
                 type: Object,
                 required: true,
             },
+            members: {
+                type: Array,
+                default: ()=>{return []}
+            }
         },
         mounted() {
             this.copiedTask = {}

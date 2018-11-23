@@ -14,7 +14,8 @@
         </v-data-table>
         <v-card class="ma-3">
             <v-layout row class="pa-2">
-                <v-autocomplete v-model="input.user" :items="suggestion" item-text="name" label="Add Member" clearable></v-autocomplete>
+                <v-text-field v-model="input.user" label="Add Member" :error-messages="error.addMember.show?error.addMember.text: []"
+                    clearable></v-text-field>
                 <v-btn @click="add()" :dark="!!input.user" :disabled="!input.user">
                     <v-icon>person_add</v-icon>
                 </v-btn>
@@ -40,7 +41,7 @@
         },
         data() {
             return {
-                project: {},
+                // project: {},
                 headers: [{
                         text: 'Username',
                         align: 'left',
@@ -54,7 +55,6 @@
                         value: 'description'
                     },
                 ],
-                suggestion: ['poonyapat'],
                 input: {
                     user: '',
                     projectId: null
@@ -69,38 +69,47 @@
                         text: 'Please check member before removing them, it may affect to other assignment.<br> when you sure please click confirm'
                     },
                 },
+                error: {
+                    addMember: {
+                        text: 'Invalid username',
+                        show: false
+                    }
+                }
+            }
+        },
+        props: {
+            project: {
+                type: Object,
+                required: true
+            },
+            reload: {
+                type: Function,
+                required: true
             }
         },
         computed: {
             ...mapState(['username', 'route'])
         },
-        async mounted() {
-            const id = this.route.params.id
-            this.project = (await ProjectService.findOne(id)).data
-        },
         methods: {
-            refresh: async function () {
-                const id = this.route.params.id
-                this.project = (await ProjectService.findOne(id)).data
-            },
             async add() {
                 try {
                     if (this.input.user != '') {
                         this.input.projectId = this.project.id
                         await ProjectService.addMember(this.input);
                         this.input.user = '';
-                        this.refresh();
+                        this.reload();
+                        this.error.addMember.show = false
                     }
                 } catch (error) {
-                    this.error = error;
+                    this.error.addMember.show = true
                 }
             },
             async remove(memberName) {
                 this.sender.user = memberName;
                 this.sender.projectId = this.project.id
                 await ProjectService.removeMember(this.sender);
-                this.refresh();
-            },
+                this.reload();
+            }
         },
     }
 </script>

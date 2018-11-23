@@ -15,5 +15,13 @@ export default {
                 username: username
             }
         })
+    },
+
+    findUsernames(query) {
+        return Api().get('user/suggest', {
+            params: {
+                query: query
+            }
+        })
     }
 }

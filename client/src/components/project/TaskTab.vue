@@ -5,7 +5,7 @@
                 <task-table @setParent="setParent" @showInfo="showInfo" @reload="loadTask" :tasks="tasks" :issue-count="issueCount" :parent-task="parentTask" @reloadIssue="loadIssue"></task-table>
             </v-flex>
             <v-flex lg4 md12 sm12>
-                <task-info @reset="selectedTask = {}" @reload="loadTask" :task="selectedTask"></task-info>
+                <task-info @reset="selectedTask = {}" @reload="loadTask" :task="selectedTask" :members="project.members"></task-info>
             </v-flex>
         </v-layout>
     </v-container>

@@ -66,6 +66,10 @@
         return {
           'Task': {
             project: this.project
+          },
+          'Member': {
+            reload: this.reload,
+            project: this.project
           }
         }
       }
@@ -75,9 +79,14 @@
       MemberTable,
       IssueTable
     },
-    async mounted() {
-      const id = this.$store.state.route.params.id
-      this.project = (await ProjectService.findOne(id)).data
+    mounted() {
+      this.reload()
+    },
+    methods: {
+      async reload() {
+        const id = this.$store.state.route.params.id
+        this.project = (await ProjectService.findOne(id)).data
+      }
     },
   }
 </script>
