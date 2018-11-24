@@ -15,6 +15,11 @@
                  })).status
              }
              const task = await Task.create(req.body)
+             await TaskWatcher.create({
+                status: task.status,
+                taskId: task.id,
+                projectId: task.projectId
+            })
              res.send({
                  task: task
              })
@@ -43,6 +48,26 @@
              })
          }
      },
+
+     async findAllWithSelectedAttributes(req, res) {
+         try {
+            console.log(req.query)
+            const tasks = await Task.findAll({
+                where: JSON.parse(req.query.query),
+                attributes: req.query.attributes
+             })
+            if (!tasks) {
+                res.status(204).send([])
+            }
+            res.send(tasks)
+         } catch (err) {
+             console.log(err)
+            res.status(500).send({
+                error: err
+            })
+        }
+     },
+     
      async findOne(req, res) {
          try {
              const task = await Task.findOne({

@@ -35,8 +35,11 @@ module.exports = (app) => {
     app.get('/project',
         ProjectController.findOne)
 
-    app.get('/tasks',
+    app.get('/task/all',
         TaskController.findAll)
+    
+        app.get('/task/all/attributes',
+        TaskController.findAllWithSelectedAttributes)
 
     app.post('/task/create',
         TaskController.create)
