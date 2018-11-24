@@ -72,5 +72,40 @@ module.exports = {
                 error: err
             })
         }
+    },
+
+    async update(req, res){
+        try{
+            console.log("------------------update------------------")
+            console.log(req.body)
+            const user = await User.findOne({
+                where: {
+                    username: req.body.username
+                }
+            })
+            const {phone,email} = req.body.userData;
+            console.log(phone)
+            console.log(email)
+            if(phone != "" ){
+                await user.update({
+                   phoneNumber : phone
+                })
+            }
+            console.log("11111")
+            if(email != ""){
+                console.log("1.5")
+                await user.update({
+                   email: email
+                 })
+            }
+                console.log("22222")
+
+                res.send({msg: 'Add Complete'})
+        }catch(err) {
+            res.status(501).send({
+                error: 'Can not update profile'
+                // error: err
+            })
+        }
     }
 }

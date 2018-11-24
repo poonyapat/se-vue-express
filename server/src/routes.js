@@ -12,6 +12,9 @@ module.exports = (app) => {
     app.post('/login',
         UserController.authenticate)
 
+    app.post('/update',
+        UserController.update)   
+
     app.get('/user',
         UserController.findOne)
 

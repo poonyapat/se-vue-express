@@ -29,9 +29,8 @@
 </template>
 <script>
   import ProjectService from "@/services/projectService";
-  import {
-    mapState
-  } from "vuex";
+  import {  mapState
+} from "vuex";
 
   export default {
     data() {

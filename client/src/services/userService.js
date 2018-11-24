@@ -15,5 +15,12 @@ export default {
                 username: username
             }
         })
-    }
+    },
+    
+    update(username,userData) {
+        return Api().post('update', {
+             username : username,
+             userData :userData}
+            )
+    },
 }
