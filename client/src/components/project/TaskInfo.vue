@@ -45,7 +45,7 @@
         data() {
             return {
                 copiedTask: {},
-                taskStatuses: ['ToDo', 'Designing', 'OnGoing', 'Done'],
+                taskStatuses: ['ToDo', 'OnGoing', 'Done'],
                 confirm: {
                     save: {
                         title: 'Modification Effect',
