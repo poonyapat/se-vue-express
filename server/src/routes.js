@@ -4,6 +4,7 @@ const ProjectController = require('./controllers/projectController')
 const UserControllerPolicy = require('./policies/userControllerPolicy')
 const TaskController = require('./controllers/taskController')
 const TaskIssueController = require('./controllers/taskIssueController')
+const TaskWatcherController = require('./controllers/taskWatcherController')
 
 module.exports = (app) => {
     app.post('/test',
@@ -64,4 +65,7 @@ module.exports = (app) => {
 
     app.post('/task/issue/updateStatus',
         TaskIssueController.updateStatus)
+    
+    app.get('/task/watcher/all',
+        TaskWatcherController.findAll)
 }

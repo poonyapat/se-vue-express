@@ -28,7 +28,8 @@
 
 <script>
   import ProjectService from '@/services/projectService'
-  import TaskTable from '@/components/project/TaskTab'
+  import TaskTab from '@/components/project/TaskTab'
+  import DataAnalysisTab from '@/components/project/DataAnalysisTab'
   import MemberTable from '@/components/project/MemberTable'
   import IssueTable from '@/components/project/IssueTable'
 
@@ -40,7 +41,7 @@
         items: [{
             name: 'Task',
             icon: 'assignment',
-            component: 'TaskTable'
+            component: 'TaskTab'
           },
           {
             name: 'Member',
@@ -55,7 +56,7 @@
           {
             name: '...',
             icon: '',
-            component: ''
+            component: 'DataAnalysisTab'
           }
         ],
         tab: null
@@ -75,9 +76,10 @@
       }
     },
     components: {
-      TaskTable,
+      TaskTab,
       MemberTable,
-      IssueTable
+      IssueTable,
+      DataAnalysisTab
     },
     mounted() {
       this.reload()
