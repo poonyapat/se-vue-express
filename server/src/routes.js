@@ -37,8 +37,8 @@ module.exports = (app) => {
 
     app.get('/task/all',
         TaskController.findAll)
-    
-        app.get('/task/all/attributes',
+
+    app.get('/task/all/attributes',
         TaskController.findAllWithSelectedAttributes)
 
     app.post('/task/create',
@@ -68,7 +68,7 @@ module.exports = (app) => {
 
     app.post('/task/issue/updateStatus',
         TaskIssueController.updateStatus)
-    
+
     app.get('/task/watcher/all',
         TaskWatcherController.findAll)
 }

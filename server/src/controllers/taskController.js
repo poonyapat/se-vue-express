@@ -51,7 +51,6 @@
 
      async findAllWithSelectedAttributes(req, res) {
          try {
-            console.log(req.query)
             const tasks = await Task.findAll({
                 where: JSON.parse(req.query.query),
                 attributes: req.query.attributes
@@ -205,5 +204,5 @@
                  error: error
              })
          }
-     }
+     },
  }

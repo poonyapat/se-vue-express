@@ -1,6 +1,6 @@
 <template>
     <v-layout justify-center>
-        <v-flex lg8 md10 sm12>
+        <v-flex lg12 md12 sm12>
             <v-card>
                 <canvas id='chart'></canvas>
             </v-card>

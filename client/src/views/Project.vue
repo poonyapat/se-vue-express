@@ -54,8 +54,8 @@
             component: 'IssueTable'
           },
           {
-            name: '...',
-            icon: '',
+            name: 'Data Analyze',
+            icon: 'bar_chart',
             component: 'DataAnalysisTab'
           }
         ],
