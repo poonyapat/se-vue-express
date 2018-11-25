@@ -11,7 +11,7 @@
 <script>
     import TaskWatcherService from '@/services/taskWatcherService'
     import projectService from '@/services/projectService'
-    import taskService from '@/services/taskService'
+    import TaskService from '@/services/taskService'
     import {
         mapState
     } from 'vuex'
@@ -23,33 +23,39 @@
                 chart: {},
                 datasets: [],
                 additionalLabel: [],
-                project: {}
+                project: {},
+                nameMapping: {}
             }
         },
         computed: {
             ...mapState(['route']),
         },
         async mounted() {
-            this.project = (await projectService.findOne(this.route.params.id)).data
+            
+            // name mapping
+            this.namesMapping = Object.assign(...(await TaskService.findAllWithSelectedAttributes({
+                projectId: this.route.params.id
+            }, ['id', 'name'])).data.map(task => ({[task.id]: task.name})))
             // load task watchers
             this.taskWatchers = (await TaskWatcherService.findAll({
                 projectId: this.route.params.id
             })).data
             // load tasks with selected attrs
-            let tempTasks = (await taskService.findAllWithSelectedAttributes({
+            let tempTasks = (await TaskService.findAllWithSelectedAttributes({
                 projectId: this.route.params.id
             }, ['id', 'estimatedCost', 'parent'])).data
             // clean data for burndown chart
-            const [taskCosts, additionalLabel] = taskService.burndown(taskService.calculateTaskCostPercentage(
-                tempTasks), this.taskWatchers)
+            const [taskCosts, additionalLabel] = TaskService.burndown(TaskService.calculateTaskCostPercentage(
+                tempTasks), this.taskWatchers, this.namesMapping)
             // create labels
             this.labels = taskCosts.map(task => task.date)
+            // project
+            this.project = (await projectService.findOne(this.route.params.id)).data
             // create data sets
             this.additionalLabel = additionalLabel
             let firstDay = Math.min.apply( Math, this.labels.map(label => new Date(label)))
             let lastDay =  this.project.dateLine? new Date(this.project.dateLine): Math.max.apply( Math, this.labels.map(label => new Date(label)))
             let fullTime = lastDay - firstDay
-            console.log(fullTime)
             this.datasets = [{
                 label: "Reality",
                 data: taskCosts.map(task => task.remainingCost),

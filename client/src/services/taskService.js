@@ -89,7 +89,7 @@ export default {
         return out
     },
 
-    burndown(tasksPercentageCosts, taskWatchers) {
+    burndown(tasksPercentageCosts, taskWatchers, namesMapping) {
         let burndownChart = []
         let addtionalLabels = []
         let percentage = 100
@@ -107,12 +107,12 @@ export default {
                 if (watcher.status == 'Done') {
                     percentage -= tasksPercentageCosts[watcher.taskId]
                     passed.push(watcher.taskId)
-                    addtionalLabels.push(`Task No.${watcher.taskId} is "Done"`)
+                    addtionalLabels.push(`Task No.${watcher.taskId} ${namesMapping[watcher.taskId]} is "Done"`)
                 } else if ((watcher.status == 'OnGoing' || watcher.status == 'ToDo') && passed.indexOf(watcher.taskId) != -1) {
                     percentage += tasksPercentageCosts[watcher.taskId]
                     let index = passed.indexOf(watcher.taskId);
                     passed.splice(index, 1);
-                    addtionalLabels.push(`Roll back Task No.${watcher.taskId} to "${watcher.status}"`)
+                    addtionalLabels.push(`Roll back Task No.${watcher.taskId} ${namesMapping[watcher.taskId]} to "${watcher.status}"`)
                 } else {   
                     addtionalLabels.push('')
                 }

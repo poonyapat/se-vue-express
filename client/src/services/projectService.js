@@ -15,6 +15,14 @@ export default {
             params: queryObject
         })
     },
+    hasPermission(projectId, username) {
+        return Api().get('project/permission', {
+            params: {
+                username: username,
+                projectId: projectId
+            }
+        })
+    },
 
     findOne(id) {
         return Api().get('project', {

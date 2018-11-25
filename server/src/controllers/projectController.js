@@ -86,7 +86,24 @@
              })
          }
      },
-
+     async hasPermission(req, res) {
+         try {
+            const project = await Project.findOne({
+                where: {
+                    id: req.query.projectId
+                }
+             })
+             if (req.query.username == project.username) {
+                 res.send({validation: true})
+             }
+             if (project.members.indexof(req.query.username) != -1) {
+                 res.send({validation: true})
+             }
+             res.send({validation: false})
+         } catch (err) {
+             res.status(500).send(err)
+         }
+     },
 
      async removeMember(req, res) {
          try {
