@@ -153,9 +153,9 @@
       },
       jumpTo: async function (parent) {
         for (let i in this.parents) {
-          if (this.parents[i].id === parent.id) {
+          if (this.parents[i].id == parent.id) {
             this.$emit('setParent', this.parents[i].id)
-            this.parents = this.parents.splice(0, parseInt(parent.id) + 1)
+            this.parents = this.parents.splice(0, parseInt(i) + 1)
             break
           }
         }

@@ -99,7 +99,6 @@
              let taskStatus = task.status
              await task.update(req.body.data)
              if (taskStatus !== req.body.data.status && taskStatus) {
-
                  await TaskWatcher.create({
                      status: task.status,
                      taskId: task.id,
@@ -142,7 +141,7 @@
                  console.log(temp, allIds)
                  await TaskWatcher.bulkCreate(temp)
              }
-             if (task.parent != 0) {
+             if (task.parent != 0 && taskStatus !== req.body.data.status) {
                  const brethrenTaskStatuses = await Task.count({
                      group: 'status',
                      where: {

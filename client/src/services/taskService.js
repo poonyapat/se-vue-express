@@ -90,8 +90,8 @@ export default {
     },
 
     burndown(tasksPercentageCosts, taskWatchers) {
-        console.log(tasksPercentageCosts, taskWatchers)
         let burndownChart = []
+        let addtionalLabels = []
         let percentage = 100
         let passed = []
         let taskIds = Object.keys(tasksPercentageCosts).map(id => parseInt(id))
@@ -102,26 +102,26 @@ export default {
                 return 1;
             return 0;
         })
-        // console.log(tasksPercentageCosts)
         taskWatchers.map(watcher => {
             if (taskIds.indexOf(watcher.taskId) != -1) {
                 if (watcher.status == 'Done') {
-                    // console.log(task.id, taskIds)
                     percentage -= tasksPercentageCosts[watcher.taskId]
                     passed.push(watcher.taskId)
+                    addtionalLabels.push(`Task No.${watcher.taskId} is "Done"`)
                 } else if ((watcher.status == 'OnGoing' || watcher.status == 'ToDo') && passed.indexOf(watcher.taskId) != -1) {
                     percentage += tasksPercentageCosts[watcher.taskId]
                     let index = passed.indexOf(watcher.taskId);
                     passed.splice(index, 1);
+                    addtionalLabels.push(`Roll back Task No.${watcher.taskId} to "${watcher.status}"`)
+                } else {   
+                    addtionalLabels.push('')
                 }
                 burndownChart.push({
                     date: watcher.createdAt,
                     remainingCost: percentage
                 })
             }
-            // console.log(watcher.taskId, taskIds, taskIds.indexOf(watcher.taskId) != -1)
         })
-        console.log(burndownChart)
-        return burndownChart
+        return [burndownChart, addtionalLabels]
     }
 }
