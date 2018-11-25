@@ -1,5 +1,5 @@
 <template>
-  <v-container class="secondary" fill-height fluid>
+  <v-container class="secondary" fill-height fluid v-if="validation">
     <v-layout row wrap>
       <v-flex>
         <div class="text-xs-left white--text ma-2">
@@ -24,6 +24,9 @@
       </v-flex>
     </v-layout>
   </v-container>
+  <div v-else>
+    <h1> Acces Denied </h1>
+  </div>
 </template>
 
 <script>
@@ -32,10 +35,12 @@
   import DataAnalysisTab from '@/components/project/DataAnalysisTab'
   import MemberTable from '@/components/project/MemberTable'
   import IssueTable from '@/components/project/IssueTable'
+  import {mapState} from 'vuex'
 
   export default {
     data() {
       return {
+        validation: false,
         project: {},
         id: '',
         items: [{
@@ -54,8 +59,8 @@
             component: 'IssueTable'
           },
           {
-            name: '...',
-            icon: '',
+            name: 'Data Analyze',
+            icon: 'bar_chart',
             component: 'DataAnalysisTab'
           }
         ],
@@ -63,6 +68,7 @@
       }
     },
     computed: {
+      ...mapState(['username', 'route']),
       properties: function () {
         return {
           'Task': {
@@ -81,12 +87,13 @@
       IssueTable,
       DataAnalysisTab
     },
-    mounted() {
+    async mounted() {
       this.reload()
+      this.validation= (await ProjectService.hasPermission(this.route.params.id, this.username)).data.validation
     },
     methods: {
       async reload() {
-        const id = this.$store.state.route.params.id
+        const id = this.route.params.id
         this.project = (await ProjectService.findOne(id)).data
       }
     },

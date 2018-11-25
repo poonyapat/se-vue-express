@@ -1,7 +1,7 @@
 <template>
     <v-data-table :headers="headers" :items="issues" hide-actions class="elevation-1">
         <tr slot="items" slot-scope="props">
-            <td> {{props.item.taskId}} </td>
+            <td> {{ `${props.item.taskId} - ${namesMapping[props.item.taskId]}`}} </td>
             <td> {{props.item.description}} </td>
             <td :style="'color: '+rowColor(props.item.status)"> {{props.item.status}} </td>
             <td> {{props.item.reporterUsername}} </td>
@@ -28,6 +28,7 @@
 
 <script>
     import TaskIssueService from '@/services/taskIssueService.1'
+    import TaskService from '@/services/taskService'
     import {
         mapState,
         mapActions
@@ -35,8 +36,9 @@
     export default {
         data() {
             return {
+                namesMapping: [],
                 headers: [{
-                    text: 'Task ID',
+                    text: 'Task',
                     value: 'taskId'
                 }, {
                     text: 'Issue',
@@ -57,7 +59,7 @@
                     status: 'Analyzing',
                     icon: 'play_arrow',
                     label: 'analyzing',
-                },{
+                }, {
                     status: 'Solving',
                     icon: 'play_arrow',
                     label: 'solving',
@@ -84,6 +86,15 @@
             this.issues = (await TaskIssueService.findAll({
                 projectId: this.route.params.id
             })).data
+            let namesMapping = (await TaskService.findAllWithSelectedAttributes({
+                id: { in: this.issues.map(issue => issue.taskId)
+                }
+            }, ['id', 'name'])).data
+            if (namesMapping.length > 0)
+                this.namesMapping = Object.assign(...namesMapping.map(task => ({
+                    [task.id]: task.name
+                })))
+            this.issues.map(issue => issue.taskName = this.namesMapping[issue.taskId])
         },
         methods: {
             ...mapActions(['updateUpdater']),
@@ -120,6 +131,15 @@
                     this.issues = (await TaskIssueService.findAll({
                         projectId: this.route.params.id
                     })).data
+                    let namesMapping = (await TaskService.findAllWithSelectedAttributes({
+                        id: { in: this.issues.map(issue => issue.taskId)
+                        }
+                    }, ['id', 'name'])).data
+                    if (namesMapping.length > 0)
+                        this.namesMapping = Object.assign(...namesMapping.map(task => ({
+                            [task.id]: task.name
+                        })))
+                    this.issues.map(issue => issue.taskName = this.namesMapping[issue.taskId])
                     this.updateUpdater({
                         key: 'issue',
                         value: false

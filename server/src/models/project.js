@@ -16,6 +16,10 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.ENUM('Close', 'Open'),
             allowNull: false
         },
+        dateLine: {
+            type: DataTypes.DATE,
+            allowNull: true
+        }
     })
 
     const User = sequelize.import('./user')
