@@ -16,7 +16,7 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.ENUM('Close', 'Open'),
             allowNull: false
         },
-        dateLine: {
+        deadLine: {
             type: DataTypes.DATE,
             allowNull: true
         }
