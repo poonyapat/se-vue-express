@@ -17,7 +17,7 @@ module.exports = (sequelize, DataTypes) => {
             allowNull: true
         },
         status: {
-            type: DataTypes.ENUM('ToDo', 'OnGoing', 'Done', 'Analyzing', 'Cancel', 'Designing'),
+            type: DataTypes.ENUM('ToDo', 'OnGoing', 'Done', 'Cancelled'),
             defaultValue: 'ToDo'
         },
         estimatedCost: {

@@ -13,7 +13,10 @@ export default new Vuex.Store({
     token: null,
     username: null,
     isUserLoggedIn: false,
-
+    updater: {
+      issue: false,
+      task: false
+    }
   },
   mutations: {
     setToken(state, token) {
@@ -23,6 +26,9 @@ export default new Vuex.Store({
     setUser(state, username) {
       state.username = username
     },
+    updateUpdater(state, entry) {
+      state.updater[entry.key] = entry.value
+    }
   },
   actions: {
     persistedLogin({commit}, data) {
@@ -33,5 +39,8 @@ export default new Vuex.Store({
       commit('setToken', null)
       commit('setUser', null)
     },
+    updateUpdater({ commit }, entry) {
+      commit('updateUpdater', entry)
+    }
   }
 })

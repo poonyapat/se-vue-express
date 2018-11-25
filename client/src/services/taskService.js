@@ -5,13 +5,23 @@ export default {
         return Api().post('task/create', taskData)
     },
     findAll(queryObject) {
-        return Api().get('tasks', {
+        return Api().get('task/all', {
             params: queryObject
         })
     },
-    findOne(id){
+    findAllWithSelectedAttributes(queryObject, attributes) {
+        return Api().get('task/all/attributes', {
+            params: {
+                query: queryObject,
+                attributes: attributes
+            }
+        })
+    },
+    findOne(id) {
         return Api().get('task', {
-            params: { id: id }
+            params: {
+                id: id
+            }
         })
     },
     update(id, data) {
@@ -24,5 +34,94 @@ export default {
         return Api().post('task/delete', {
             id: id
         })
+    },
+
+    calculateTaskCostPercentage(tasks) {
+        let parentIds = [{
+            id: 0,
+            cost: 100
+        }]
+        const out = {}
+        while (parentIds.length > 0) {
+            let tempParentIds = []
+            parentIds.map(parentId => {
+                let sumCost = 0
+                let naCount = 0
+                let selectedTasks = []
+                tasks.map(task => {
+                    if (task.parent == parentId.id) {
+                        selectedTasks.push(task)
+                        if (task.estimatedCost > 0) {
+                            sumCost = sumCost + task.estimatedCost;
+                        } else {
+                            naCount++;
+                        }
+                    }
+                })
+                if (selectedTasks.length == 0) {
+                    // out.push({
+                    //     id: parentId.id,
+                    //     cost: parentId.cost
+                    // })
+                    out[parentId.id] = parentId.cost
+                }
+                let naCost = 0
+                if (sumCost != 0) {
+                    naCost = sumCost / (selectedTasks.length - naCount)
+                    sumCost += naCost * naCount
+                }
+                selectedTasks.map(task => {
+                    if (sumCost == 0) {
+                        task.percentageCost = parentId.cost / selectedTasks.length
+                    } else if (!task.estimatedCost) {
+                        task.percentageCost = parentId.cost * naCost / sumCost
+                    } else {
+                        task.percentageCost = parentId.cost * task.estimatedCost / sumCost
+                    }
+                })
+                selectedTasks.map(task => tempParentIds.push({
+                    id: task.id,
+                    cost: task.percentageCost
+                }))
+            })
+            parentIds = tempParentIds
+        }
+        return out
+    },
+
+    burndown(tasksPercentageCosts, taskWatchers) {
+        console.log(tasksPercentageCosts, taskWatchers)
+        let burndownChart = []
+        let percentage = 100
+        let passed = []
+        let taskIds = Object.keys(tasksPercentageCosts).map(id => parseInt(id))
+        taskWatchers.sort((a, b) => {
+            if (a.createdAt < b.createdAt)
+                return -1;
+            if (a.createdAt > b.createdAt)
+                return 1;
+            return 0;
+        })
+        // console.log(tasksPercentageCosts)
+        taskWatchers.map(watcher => {
+            if (taskIds.indexOf(watcher.taskId) != -1) {
+                if (watcher.status == 'Done') {
+                    // console.log(task.id, taskIds)
+                    percentage -= tasksPercentageCosts[watcher.taskId]
+                    passed.push(watcher.taskId)
+                } else if ((watcher.status == 'OnGoing' || watcher.status == 'ToDo') && passed.indexOf(watcher.taskId) != -1) {
+                    percentage += tasksPercentageCosts[watcher.taskId]
+                    let index = passed.indexOf(watcher.taskId);
+                    passed.splice(index, 1);
+                }
+                burndownChart.push({
+                    date: watcher.createdAt,
+                    remainingCost: percentage
+                })
+            }
+            // console.log(watcher.taskId, taskIds, taskIds.indexOf(watcher.taskId) != -1)
+        })
+        console.log(burndownChart)
+        return burndownChart
     }
 }

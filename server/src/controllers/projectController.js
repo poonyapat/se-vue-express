@@ -1,4 +1,7 @@
- const {Project, User} = require('../models')
+ const {
+     Project,
+     User
+ } = require('../models')
  module.exports = {
      async create(req, res) {
          try {
@@ -37,16 +40,9 @@
                      id: req.query.id
                  }
              })
-             // if (!id) {
-             //     res.status(403).send({
-             //         error: 'This project doesn\'t exist'
-             //     })
-             // }
-             // delete user.password
              res.send(project)
          } catch (err) {
              res.status(501).send({
-                 // error: 'An error has occured trying to login'
                  error: err
              })
          }
@@ -65,41 +61,27 @@
                          username: req.body.user
                      }
                  })
-                 var i;
-                 var fact = false;
-                 for(i = 0; i< project.members.length; i++){
-                    if(user.username == project.members[i] || user.username == project.username){
-                            fact = true;
-                    }
+                 let fact = false;
+                 for (let i = 0; i < project.members.length; i++) {
+                     if (user.username == project.members[i] || user.username == project.username) {
+                         fact = true;
+                     }
                  }
-                 if(fact != true){
-                    console.log(project.members)
-                    project.members.push(user.username) // id  of  user
-                    console.log("555555555")
-                    await project.update({
-                        members: project.members
-                    })
-                    res.send("Add Finish")
-                 }else{
+                 if (fact != true) {
+                     console.log(project.members)
+                     project.members.push(user.username) // id  of  user
+                     console.log("555555555")
+                     await project.update({
+                         members: project.members
+                     })
+                     res.send("Add Finish")
+                 } else {
                      res.send("Can not add")
                      console.log("redundant")
                  }
-            
-            //     console.log(user.username)
-                //  if (user != null) {
-                //      console.log(project.members)
-                //      project.members.push(user.username) // id  of  user
-                //      console.log("555555555")
-                //      project.update({
-                //          members: project.members
-                //      })
-                //  }
-
-
              }
          } catch (err) {
-             res.status(501).send({
-                 // error: 'An error has occured trying to login'
+             res.status(400).send({
                  error: err
              })
          }
@@ -107,43 +89,42 @@
 
 
      async removeMember(req, res) {
-        try{
-            console.log(req.body)
-            const project = await Project.findOne({
-                where: {
-                    id: req.body.projectId
-                }
-            })
-            console.log(req.body)
-            username = req.body.user;
-            var i;
-            var fact = false;
-            for(i = 0; i< project.members.length; i++){
-               if(username == project.members[i]){
-                       fact = true;
-               }
-            }
-            if(fact == true){
-                        project.members.pop(username) // id  of  user
-                        await project.update({
-                            members: project.members
-                        })
-                        res.send("remove complete")
-            }
-            else{
-                console.log("Not match")
-            }
+         try {
+             console.log(req.body)
+             const project = await Project.findOne({
+                 where: {
+                     id: req.body.projectId
+                 }
+             })
+             console.log(req.body)
+             username = req.body.user;
+             var i;
+             var fact = false;
+             for (i = 0; i < project.members.length; i++) {
+                 if (username == project.members[i]) {
+                     fact = true;
+                 }
+             }
+             if (fact == true) {
+                 project.members.pop(username) // id  of  user
+                 await project.update({
+                     members: project.members
+                 })
+                 res.send("remove complete")
+             } else {
+                 console.log("Not match")
+             }
 
 
-        }catch(err) {
-            res.status(501).send({
-                // error: 'An error has occured trying to login'
-                error: err
-            })
-        }
-    
-    
-    }
+         } catch (err) {
+             res.status(501).send({
+                 // error: 'An error has occured trying to login'
+                 error: err
+             })
+         }
+
+
+     }
 
 
  }

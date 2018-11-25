@@ -18,7 +18,7 @@
         </v-text-field>
         <v-text-field prepend-icon="comment" v-model="input.description" label="Description" type="text">
         </v-text-field>
-        <v-text-field prepend-icon="comment" v-model="input.estimatedCost" label="Estimate Cost" type="number" style="width: 45%; display:inline-block">
+        <v-text-field prepend-icon="comment" v-model="input.estimatedCost" label="Estimate Cost" type="number" style="width: 45%; display:inline-block" class="mr-3">
         </v-text-field>
         <v-text-field prepend-icon="comment" v-model="input.priority" label="Priority" type="number" style="width: 45%;display:inline-block">
         </v-text-field>

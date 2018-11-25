@@ -28,7 +28,8 @@
 
 <script>
   import ProjectService from '@/services/projectService'
-  import TaskTable from '@/components/project/TaskTab'
+  import TaskTab from '@/components/project/TaskTab'
+  import DataAnalysisTab from '@/components/project/DataAnalysisTab'
   import MemberTable from '@/components/project/MemberTable'
   import IssueTable from '@/components/project/IssueTable'
 
@@ -40,7 +41,7 @@
         items: [{
             name: 'Task',
             icon: 'assignment',
-            component: 'TaskTable'
+            component: 'TaskTab'
           },
           {
             name: 'Member',
@@ -55,7 +56,7 @@
           {
             name: '...',
             icon: '',
-            component: ''
+            component: 'DataAnalysisTab'
           }
         ],
         tab: null
@@ -66,18 +67,28 @@
         return {
           'Task': {
             project: this.project
+          },
+          'Member': {
+            reload: this.reload,
+            project: this.project
           }
         }
       }
     },
     components: {
-      TaskTable,
+      TaskTab,
       MemberTable,
-      IssueTable
+      IssueTable,
+      DataAnalysisTab
     },
-    async mounted() {
-      const id = this.$store.state.route.params.id
-      this.project = (await ProjectService.findOne(id)).data
+    mounted() {
+      this.reload()
+    },
+    methods: {
+      async reload() {
+        const id = this.$store.state.route.params.id
+        this.project = (await ProjectService.findOne(id)).data
+      }
     },
   }
 </script>

@@ -9,23 +9,29 @@
     <v-card-text>
       <v-data-table :headers="headers" :items="tasks" item-key="id" hide-actions :rows-per-page-items="[{value: 10}]">
         <template slot="items" slot-scope="props">
-          <tr @click="forward(props.item)" class="text-xs-left" :style="'background: '+rowColor(props.item.status)">
+          <tr class="text-xs-left" :style="'background: '+rowColor(props.item.status)">
             <td>{{ props.item.name }}</td>
             <td class="text-xs-center">{{ props.item.status }}</td>
             <td class="text-xs-center">{{ props.item.estimatedCost }}</td>
             <td class="text-xs-center">{{ props.item.priority }}</td>
-            <td class="text-xs-center">
+            <td class="text-xs-right">
               <v-tooltip bottom>
-                <v-btn icon @click.stop="$emit('showInfo',props.item)" slot="activator">
+                <v-btn icon @click.stop="$emit('showInfo',props.item)" slot="activator" class="ma-0">
                   <v-icon>info</v-icon>
                 </v-btn>
                 Show Information
+              </v-tooltip>
+              <v-tooltip bottom>
+                <v-btn icon @click.stop="forward(props.item)" slot="activator" class="ma-0">
+                  <v-icon>subdirectory_arrow_right</v-icon>
+                </v-btn>
+                show sub tasks
               </v-tooltip>
               <question-dialog @confirm="reportIssue(props.item.id)" :title="confirm.issue.title" text-field v-model="confirm.issue.description"
                 :text="confirm.issue.text" :label="confirm.issue.label">
                 <v-tooltip bottom>
                   Report Issue
-                  <v-btn icon slot="activator">
+                  <v-btn icon slot="activator" class="ma-0">
                     <v-badge right overlap>
                       <span slot="badge" v-if="taskIssueCount[props.item.id]"> {{taskIssueCount[props.item.id]}} </span>
                       <v-icon>warning</v-icon>
@@ -60,7 +66,10 @@
   import ConfirmDialog from '@/components/ConfirmDialog'
   import QuestionDialog from '@/components/QuestionDialog'
   import TaskIssueService from '@/services/taskIssueService.1'
-  import {mapState} from 'vuex'
+  import {
+    mapState,
+    mapActions
+  } from 'vuex'
   export default {
     components: {
       TaskCreator,
@@ -125,10 +134,13 @@
       },
       issueCount: {
         type: Array,
-        default: []
+        default: () => {
+          return []
+        }
       }
     },
     methods: {
+      ...mapActions(['updateUpdater']),
       forward: function (selectedItem) {
         this.$emit('setParent', selectedItem.id)
         if (this.parents[this.parents.length - 1].id != selectedItem.id) {
@@ -170,9 +182,15 @@
         await TaskIssueService.create({
           description: this.confirm.issue.description,
           reporterUsername: this.username,
-          taskId: id
+          taskId: id,
+          projectId: this.route.params.id
         })
         this.$emit('reloadIssue')
+        this.updateUpdater({
+          key: 'issue',
+          value: true
+        })
+        this.confirm.issue.description = ''
       }
     },
 
@@ -182,12 +200,12 @@
       },
     },
     computed: {
-      taskIssueCount(){
+      taskIssueCount() {
         const issueCount = {}
         this.issueCount.map(issue => issueCount[issue.taskId] = issue.issueCount)
         return issueCount
       },
-      ...mapState(['username'])
+      ...mapState(['username', 'route'])
     }
   }
 </script>

@@ -23,4 +23,12 @@ export default {
              userData :userData}
             )
     },
+
+    findUsernames(query) {
+        return Api().get('user/suggest', {
+            params: {
+                query: query
+            }
+        })
+    }
 }

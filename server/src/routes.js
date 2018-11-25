@@ -4,6 +4,7 @@ const ProjectController = require('./controllers/projectController')
 const UserControllerPolicy = require('./policies/userControllerPolicy')
 const TaskController = require('./controllers/taskController')
 const TaskIssueController = require('./controllers/taskIssueController')
+const TaskWatcherController = require('./controllers/taskWatcherController')
 
 module.exports = (app) => {
     app.post('/test',
@@ -29,16 +30,19 @@ module.exports = (app) => {
         ProjectController.addMember)
 
     app.post('/project/removeMember',
-        ProjectController.removeMember)       
-    
+        ProjectController.removeMember)
+
     app.get('/projects',
         ProjectController.findAll)
 
     app.get('/project',
         ProjectController.findOne)
 
-    app.get('/tasks',
+    app.get('/task/all',
         TaskController.findAll)
+    
+        app.get('/task/all/attributes',
+        TaskController.findAllWithSelectedAttributes)
 
     app.post('/task/create',
         TaskController.create)
@@ -61,4 +65,13 @@ module.exports = (app) => {
 
     app.get('/task/issue/count',
         TaskIssueController.countAll)
+
+    app.post('/task/issue/remove',
+        TaskIssueController.remove)
+
+    app.post('/task/issue/updateStatus',
+        TaskIssueController.updateStatus)
+    
+    app.get('/task/watcher/all',
+        TaskWatcherController.findAll)
 }

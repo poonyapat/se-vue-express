@@ -5,7 +5,7 @@ export default {
         return Api().post('task/issue/create', taskIssue)
     },
     findAll(queryObject) {
-        return Api().get('projects', {
+        return Api().get('task/issue/all', {
             params: queryObject
         })
     },
@@ -13,6 +13,19 @@ export default {
     countAll(ids) {
         return Api().get('task/issue/count', {
             params: { ids: ids  }
+        })
+    },
+
+    remove(id) {
+        return Api().post('task/issue/remove', {
+            id: id
+        })
+    },
+
+    updateStatus(id, status) {
+        return Api().post('task/issue/updateStatus', {
+            id: id,
+            status: status
         })
     }
 }

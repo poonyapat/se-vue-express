@@ -1,5 +1,6 @@
  const {
-     Task
+     Task,
+     TaskWatcher
  } = require('../models')
 
  module.exports = {
@@ -14,6 +15,11 @@
                  })).status
              }
              const task = await Task.create(req.body)
+             await TaskWatcher.create({
+                status: task.status,
+                taskId: task.id,
+                projectId: task.projectId
+            })
              res.send({
                  task: task
              })
@@ -42,6 +48,26 @@
              })
          }
      },
+
+     async findAllWithSelectedAttributes(req, res) {
+         try {
+            console.log(req.query)
+            const tasks = await Task.findAll({
+                where: JSON.parse(req.query.query),
+                attributes: req.query.attributes
+             })
+            if (!tasks) {
+                res.status(204).send([])
+            }
+            res.send(tasks)
+         } catch (err) {
+             console.log(err)
+            res.status(500).send({
+                error: err
+            })
+        }
+     },
+     
      async findOne(req, res) {
          try {
              const task = await Task.findOne({
@@ -59,6 +85,7 @@
 
      async update(req, res) {
          try {
+             console.log(req.body)
              const task = await Task.findOne({
                  where: {
                      id: req.body.id
@@ -72,6 +99,12 @@
              let taskStatus = task.status
              await task.update(req.body.data)
              if (taskStatus !== req.body.data.status && taskStatus) {
+
+                 await TaskWatcher.create({
+                     status: task.status,
+                     taskId: task.id,
+                     projectId: task.projectId
+                 })
                  const tasks = await Task.findAll({
                      where: {
                          parent: req.body.id
@@ -79,7 +112,7 @@
                      attributes: ['id']
                  })
                  let taskIds = tasks.map(e => e.id)
-                 let allIds = [req.body.parent]
+                 let allIds = []
                  while (taskIds.length > 0) {
                      let subTasks = await Task.findAll({
                          where: {
@@ -98,6 +131,16 @@
                          }
                      },
                  })
+                 let temp = []
+                 for (let index in allIds) {
+                     temp.push({
+                         status: task.status,
+                         taskId: allIds[index],
+                         projectId: task.projectId
+                     })
+                 }
+                 console.log(temp, allIds)
+                 await TaskWatcher.bulkCreate(temp)
              }
              if (task.parent != 0) {
                  const brethrenTaskStatuses = await Task.count({
@@ -115,10 +158,16 @@
                              id: task.parent
                          },
                      })
+                     await TaskWatcher.create({
+                         status: task.status,
+                         taskId: task.parent,
+                         projectId: task.projectId
+                     })
                  }
              }
-            //  console.log(taskFriStatuses.length)
-             res.send({msg: 'Complete Process'})
+             res.send({
+                 msg: 'Complete Process'
+             })
          } catch (error) {
              res.status(500).send({
                  error: error
