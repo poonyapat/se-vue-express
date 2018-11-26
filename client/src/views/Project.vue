@@ -6,13 +6,11 @@
           <h1> {{project.name}} </h1>
           <p> {{project.description}} </p>
         </div>
-        <v-tabs class="mt-2" slot="extension" v-model="tab" dark grow>
+        <v-tabs class="mt-2" slot="extension" v-model="tab" dark grow icons-and-text show-arrows>
           <v-tab v-for="item in items" :key="item.name" class="secondary darken-1">
-            <v-icon large> {{ item.icon }} </v-icon>
             {{ item.name }}
-
+            <v-icon large> {{ item.icon }} </v-icon>
           </v-tab>
-
           <v-tabs-items>
             <v-tab-item v-for="item in items" :id="'tab-' + item.name" :key="item.name">
               <v-container class="secondary darken-1" fluid>
@@ -33,9 +31,12 @@
   import ProjectService from '@/services/projectService'
   import TaskTab from '@/components/project/TaskTab'
   import DataAnalysisTab from '@/components/project/DataAnalysisTab'
+  import GeneralInformationTab from '@/components/project/GeneralInformationTab'
   import MemberTable from '@/components/project/MemberTable'
   import IssueTable from '@/components/project/IssueTable'
-  import {mapState} from 'vuex'
+  import {
+    mapState
+  } from 'vuex'
 
   export default {
     data() {
@@ -44,6 +45,10 @@
         project: {},
         id: '',
         items: [{
+            name: 'Info',
+            icon: 'info',
+            component: 'GeneralInformationTab'
+          }, {
             name: 'Task',
             icon: 'assignment',
             component: 'TaskTab'
@@ -71,6 +76,9 @@
       ...mapState(['username', 'route']),
       properties: function () {
         return {
+          'Info': {
+            project: this.project
+          },
           'Task': {
             project: this.project
           },
@@ -82,6 +90,7 @@
       }
     },
     components: {
+      GeneralInformationTab,
       TaskTab,
       MemberTable,
       IssueTable,
@@ -89,7 +98,7 @@
     },
     async mounted() {
       this.reload()
-      this.validation= (await ProjectService.hasPermission(this.route.params.id, this.username)).data.validation
+      this.validation = (await ProjectService.hasPermission(this.route.params.id, this.username)).data.validation
     },
     methods: {
       async reload() {

@@ -1,6 +1,6 @@
 <template>
     <v-layout justify-center>
-        <v-flex lg12 md12 sm12>
+        <v-flex lg10 md11 sm12>
             <v-card>
                 <canvas id='chart'></canvas>
             </v-card>
@@ -31,11 +31,13 @@
             ...mapState(['route']),
         },
         async mounted() {
-            
+
             // name mapping
             this.namesMapping = Object.assign(...(await TaskService.findAllWithSelectedAttributes({
                 projectId: this.route.params.id
-            }, ['id', 'name'])).data.map(task => ({[task.id]: task.name})))
+            }, ['id', 'name'])).data.map(task => ({
+                [task.id]: task.name
+            })))
             // load task watchers
             this.taskWatchers = (await TaskWatcherService.findAll({
                 projectId: this.route.params.id
@@ -53,8 +55,9 @@
             this.project = (await projectService.findOne(this.route.params.id)).data
             // create data sets
             this.additionalLabel = additionalLabel
-            let firstDay = Math.min.apply( Math, this.labels.map(label => new Date(label)))
-            let lastDay =  this.project.dateLine? new Date(this.project.dateLine): Math.max.apply( Math, this.labels.map(label => new Date(label)))
+            let firstDay = Math.min.apply(Math, this.labels.map(label => new Date(label)))
+            let lastDay = this.project.dateLine ? new Date(this.project.dateLine) : Math.max.apply(Math, this.labels
+                .map(label => new Date(label)))
             let fullTime = lastDay - firstDay
             this.datasets = [{
                 label: "Reality",
@@ -62,7 +65,7 @@
                 backgroundColor: 'rgba(200,200,255,0.4)'
             }, {
                 label: "Simple Prediction",
-                data: this.labels.map(label => ((lastDay - new Date(label))/(fullTime))*100),
+                data: this.labels.map(label => ((lastDay - new Date(label)) / (fullTime)) * 100),
                 backgroundColor: 'rgba(255,200,200,0.4)'
             }]
             // plot chart
