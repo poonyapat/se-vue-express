@@ -32,12 +32,20 @@
 
      async findAll(req, res) {
          try {
-             if (!req.query.parent && req.query.parent != 0) {
-                 res.status(403).send('Invalid Parent Tasks')
-             }
+            //  if (!req.query.parent && req.query.parent != 0) {
+            //     console.log(req.query)
+            //     console.log("-----------------------------------asdsad----------")
+            //     res.status(403).send('Invalid Parent Tasks')
+            //  }
              const tasks = await Task.findAll({
                  where: req.query
              })
+             for (let index = 0; index < tasks.length; index++) {
+                 const element = tasks[index];
+                if (element.parent != 0) {
+                        res.status(403).send('Invalid Parent Tasks')
+                     }
+             }
              if (!tasks) {
                  res.status(204).send([])
              }

@@ -1,6 +1,7 @@
 <template>
     <v-list expand flat dark>
-        <!-- {{ projects }} -->
+     
+    
         <v-list-tile 
             v-for="task in tasks" 
             :key="task.id"
@@ -27,7 +28,7 @@ export default {
     },
     async mounted() {
         this.tasks = (await TaskService.findAll({
-            username: this.username
+            username: this.username    
         })).data
     },
     methods: {
