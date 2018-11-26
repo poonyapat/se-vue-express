@@ -11,9 +11,11 @@
                             {{user?user.username:''}}
                         </h2>
                         <v-spacer></v-spacer>
-                        <router-link :to="{name:'profile', params: {username: this.username}}">
-                            <v-icon>edit</v-icon>
-                        </router-link>
+                         <!-- <router-link :to="{name:'profile', params: {username: this.username}}">
+                           
+                            <v-icon>edit</v-icon> 
+                        </router-link>    -->
+                        <edition></edition>
                     </v-card-title>
                     <v-divider></v-divider>
                     <v-card-text>
@@ -52,7 +54,7 @@
                 </v-card>
             </v-flex>
             <v-flex xs12 sm7 md8>
-                <profile-tabs></profile-tabs>
+                <profile-tabs></profile-tabs>             
             </v-flex>
         </v-layout>
     </v-container>
@@ -61,6 +63,8 @@
 <script>
 import ProfileTabs from '@/components/ProfileTabs'
 import UserService from '@/services/userService'
+import Edition from '@/components/Edition'
+
 import {mapState} from 'vuex'
 export default {
     data() {
@@ -70,7 +74,7 @@ export default {
         }
     },
     components: {
-        ProfileTabs
+        ProfileTabs, Edition
     },
     computed: {
         ...mapState([

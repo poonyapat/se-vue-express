@@ -16,6 +16,13 @@ export default {
             }
         })
     },
+    
+    update(username,userData) {
+        return Api().post('update', {
+             username : username,
+             userData :userData}
+            )
+    },
 
     findUsernames(query) {
         return Api().get('user/suggest', {
