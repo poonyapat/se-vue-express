@@ -56,7 +56,7 @@
             // create data sets
             this.additionalLabel = additionalLabel
             let firstDay = Math.min.apply(Math, this.labels.map(label => new Date(label)))
-            let lastDay = this.project.dateLine ? new Date(this.project.dateLine) : Math.max.apply(Math, this.labels
+            let lastDay = this.project.deadLine ? new Date(this.project.deadLine) : Math.max.apply(Math, this.labels
                 .map(label => new Date(label)))
             let fullTime = lastDay - firstDay
             this.datasets = [{
@@ -100,7 +100,7 @@
                                 type: 'time',
                                 time: {
                                     unit: 'day',
-                                    max: this.project.dateLine
+                                    max: this.project.deadLine
                                 }
                             }],
 

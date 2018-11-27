@@ -37,6 +37,9 @@ module.exports = (app) => {
     
     app.get('/project/permission',
         ProjectController.hasPermission)
+    
+    app.post('/project/update',
+        ProjectController.update)
 
     app.get('/project',
         ProjectController.findOne)

@@ -56,91 +56,121 @@
                          id: req.body.projectId
                      }
                  })
+                 if (!project) {
+                     res.status(403).send({
+                         error: 'Invalid project name'
+                     })
+                 }
                  const user = await User.findOne({
                      where: {
                          username: req.body.user
                      }
                  })
-                 let fact = false;
-                 for (let i = 0; i < project.members.length; i++) {
-                     if (user.username == project.members[i] || user.username == project.username) {
-                         fact = true;
-                     }
+                 if (!user) {
+                     res.status(403).send({
+                         error: 'Invalid username'
+                     })
                  }
-                 if (fact != true) {
-                     console.log(project.members)
-                     project.members.push(user.username) // id  of  user
-                     console.log("555555555")
+                 if (project.members.indexof(user.username) == -1) {
+                     project.members.push(user.username)
                      await project.update({
                          members: project.members
                      })
-                     res.send("Add Finish")
+                     res.send({
+                         msg: "Add Member Complete"
+                     })
                  } else {
-                     res.send("Can not add")
-                     console.log("redundant")
+                     res.status(403).send({
+                         error: "This user is already in your project"
+                     })
                  }
              }
          } catch (err) {
-             res.status(400).send({
+             res.status(500).send({
                  error: err
              })
          }
      },
      async hasPermission(req, res) {
          try {
-            const project = await Project.findOne({
-                where: {
-                    id: req.query.projectId
-                }
+             const project = await Project.findOne({
+                 where: {
+                     id: req.query.projectId
+                 }
              })
-             if (req.query.username == project.username) {
-                 res.send({validation: true})
+             if (!project) {
+                 res.status(403).send("Invalid Project ID")
              }
-             if (project.members.indexof(req.query.username) != -1) {
-                 res.send({validation: true})
+             const isMember = project.members.indexOf(req.query.username) != -1
+             const isProjectManager = req.query.username == project.username
+             if (isMember || isProjectManager) {
+                 res.send({
+                     validation: true
+                 })
              }
-             res.send({validation: false})
+             res.send({
+                 validation: false
+             })
          } catch (err) {
+             console.log(err)
              res.status(500).send(err)
          }
      },
 
      async removeMember(req, res) {
          try {
-             console.log(req.body)
              const project = await Project.findOne({
                  where: {
                      id: req.body.projectId
                  }
              })
-             console.log(req.body)
-             username = req.body.user;
-             var i;
-             var fact = false;
-             for (i = 0; i < project.members.length; i++) {
-                 if (username == project.members[i]) {
-                     fact = true;
-                 }
+             if (!project) {
+                 res.status(403).send({
+                     error: "Invalid Project ID"
+                 })
              }
-             if (fact == true) {
-                 project.members.pop(username) // id  of  user
+             const username = req.body.user;
+             if (project.members.indexof(username) != -1) {
+                 project.members.pop(username)
                  await project.update({
                      members: project.members
                  })
-                 res.send("remove complete")
+                 res.send({
+                     msg: "remove complete"
+                 })
              } else {
-                 console.log("Not match")
+                 res.status(403).send({
+                     error: "Invalid Username"
+                 })
              }
-
-
          } catch (err) {
-             res.status(501).send({
-                 // error: 'An error has occured trying to login'
+             res.status(500).send({
+                 error: 'An error has occured trying to login'
+             })
+         }
+     },
+     async update(req, res) {
+         try {
+             if (!req.body.project) {
+                 res.status(403).send({error: 'New Information is not defined'})
+             }
+             await Project.update({
+                 name: req.body.project.name,
+                 description: req.body.project.description,
+                 status: req.body.project.status,
+                 deadLine: req.body.project.deadLine
+             }, {
+                 where: {
+                     id: req.body.project.id
+                 },
+             })
+             res.send({msg: "Update Complete"})
+         } catch (err) {
+             console.log(err)
+             res.status(500).send({
                  error: err
              })
          }
-
-
      }
 
 

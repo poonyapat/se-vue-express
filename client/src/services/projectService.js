@@ -28,5 +28,8 @@ export default {
         return Api().get('project', {
             params: { id: id  }
         })
+    },
+    update(project) {
+        return Api().post('project/update', project)
     }
 }
