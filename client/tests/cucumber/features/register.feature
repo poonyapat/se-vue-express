@@ -34,5 +34,10 @@ Feature: Create user account
         When create account
         Then error status code 400 with "Require more information"
     Scenario: Create account with existed username
+        Given username is "test0001"
+        And password is "password"
+        And phonenumber is "0899999999"
+        When create account
+        Then error status code 400 with "This account is already exist"
     Scenario: Create account with wrong format phonenumber
     Scenario: Create account with wrong format email

@@ -38,5 +38,13 @@ module.exports = {
             }
             next()
         }
+    },
+    authenticate(req, res, next) {
+        if (req.body.username && req.body.password)
+            next()
+        else
+            res.status(400).send({
+                error: "Require more information"
+            })
     }
 }
