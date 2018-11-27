@@ -69,9 +69,11 @@ export default {
     }
     },
     async mounted() {
+       
         this.projects = (await ProjectService.findAll({
             username: this.username,
         })).data  
+        
   
    
     },

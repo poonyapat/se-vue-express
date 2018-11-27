@@ -1,9 +1,11 @@
 <template>
      <v-layout>
+        
         <v-dialog width="500" v-model="show">          
              <v-btn flat icon  slot="activator">
                   <v-icon>edit</v-icon>
              </v-btn>
+            
             <v-card max-width="500px">
                 <v-toolbar dark>
                     <v-toolbar-title>
@@ -11,6 +13,7 @@
                         Edit Profile
                     </v-toolbar-title>
                 </v-toolbar>
+                  <v-card-text>
                 <v-form>
                     <!-- upload pic -->
                     <v-text-field prepend-icon="phone" v-model="input.phone"  :rules="[rules.phoneNumber]"  label="Phone number"  type="text">
@@ -18,6 +21,7 @@
                     <v-text-field prepend-icon="email" v-model="input.email"  :rules="[rules.emailMatch]"  label="E-mail" type="text">
                     </v-text-field>
                 </v-form>
+            </v-card-text>
                 <v-card-actions>
                     <v-spacer></v-spacer>
                     <v-btn @click="update()">Update</v-btn>
