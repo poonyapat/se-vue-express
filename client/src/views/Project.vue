@@ -89,6 +89,9 @@
           'Member': {
             reload: this.reload,
             project: this.project
+          },
+          'Issue': {
+            readonly: this.project.status == 'Close'
           }
         }
       }

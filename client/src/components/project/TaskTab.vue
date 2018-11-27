@@ -2,10 +2,10 @@
     <v-container fluid grid-list-lg>
         <v-layout justify-center row wrap>
             <v-flex lg8 md12 sm12>
-                <task-table @setParent="setParent" @showInfo="showInfo" @reload="loadTask" :tasks="tasks" :issue-count="issueCount" :parent-task="parentTask" @reloadIssue="loadIssue"></task-table>
+                <task-table @setParent="setParent" @showInfo="showInfo" @reload="loadTask" :tasks="tasks" :issue-count="issueCount" :parent-task="parentTask" @reloadIssue="loadIssue" :readonly="project.status=='Close'"></task-table>
             </v-flex>
             <v-flex lg4 md12 sm12>
-                <task-info @reset="selectedTask = {}" @reload="loadTask" :task="selectedTask" :members="memberAndLeader"></task-info>
+                <task-info @reset="selectedTask = {}" @reload="loadTask" :task="selectedTask" :members="memberAndLeader" :readonly="project.status=='Close'"></task-info>
             </v-flex>
         </v-layout>
     </v-container>

@@ -6,7 +6,7 @@
             <td :style="'color: '+rowColor(props.item.status)"> {{props.item.status}} </td>
             <td> {{props.item.reporterUsername}} </td>
             <td class="text-xs-right">
-                <v-menu left v-if="props.item.status != 'Cancelled' && props.item.status != 'Complete'">
+                <v-menu left v-if="!readonly && props.item.status != 'Cancelled' && props.item.status != 'Complete'">
                     <v-btn slot="activator" color="primary" dark icon flat>
                         <v-icon>more_vert</v-icon>
                     </v-btn>
@@ -78,6 +78,12 @@
                 }],
                 issues: []
             }
+        },
+        props: {
+            readonly: {
+                type: Boolean,
+                required: true
+            },
         },
         computed: {
             ...mapState(['route', 'updater'])

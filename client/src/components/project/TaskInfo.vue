@@ -16,15 +16,16 @@
         <v-divider></v-divider>
         <template v-if="Object.keys(copiedTask).length > 2">
             <v-card-text>
-                <v-text-field v-model="copiedTask.name" label="Task name"></v-text-field>
-                <v-textarea v-model="copiedTask.description" label="Description"></v-textarea>
-                <v-select v-model="copiedTask.status" :items="taskStatuses" label="Status"></v-select>
+                <v-text-field v-model="copiedTask.name" label="Task name" :readonly="readonly"></v-text-field>
+                <v-textarea v-model="copiedTask.description" label="Description" :readonly="readonly"></v-textarea>
+                <v-select v-model="copiedTask.status" :items="taskStatuses" label="Status" :readonly="readonly"></v-select>
                 <v-text-field v-model="copiedTask.estimatedCost" label="Estimated Cost" type="number" style="width:47%;display:inline-block"
-                    class="mr-3"></v-text-field>
-                <v-text-field v-model="copiedTask.priority" label="Priority" type="number" style="width:47%;display:inline-block"></v-text-field>
-                <v-select v-model="copiedTask.username" :items="members" label="Person in charge"></v-select>
+                    class="mr-3" :readonly="readonly"></v-text-field>
+                <v-text-field v-model="copiedTask.priority" label="Priority" type="number" style="width:47%;display:inline-block"
+                    :readonly="readonly"></v-text-field>
+                <v-select v-model="copiedTask.username" :items="members" label="Person in charge" :readonly="readonly"></v-select>
             </v-card-text>
-            <v-card-actions>
+            <v-card-actions v-if="!readonly">
                 <v-spacer></v-spacer>
                 <confirm-dialog @confirm="save" :title="confirm.save.title" :text="confirm.save.text">
                     <v-btn>Save</v-btn>
@@ -61,7 +62,13 @@
             },
             members: {
                 type: Array,
-                default: ()=>{return []}
+                default: () => {
+                    return []
+                }
+            },
+            readonly: {
+                type: Boolean,
+                default: false
             }
         },
         mounted() {
@@ -70,7 +77,9 @@
         },
         watch: {
             task: function () {
-                this.copiedTask = {status: ''}
+                this.copiedTask = {
+                    status: ''
+                }
                 Object.assign(this.copiedTask, this.task)
             }
         },

@@ -27,7 +27,7 @@
                 </v-btn>
                 show sub tasks
               </v-tooltip>
-              <question-dialog @confirm="reportIssue(props.item.id)" :title="confirm.issue.title" text-field v-model="confirm.issue.description"
+              <question-dialog v-if="!readonly" @confirm="reportIssue(props.item.id)" :title="confirm.issue.title" text-field v-model="confirm.issue.description"
                 :text="confirm.issue.text" :label="confirm.issue.label">
                 <v-tooltip bottom>
                   Report Issue
@@ -39,7 +39,7 @@
                   </v-btn>
                 </v-tooltip>
               </question-dialog>
-              <confirm-dialog @confirm="remove(props.item.id)" :title="confirm.deletion.title" :text="confirm.deletion.text">
+              <confirm-dialog v-if="!readonly" @confirm="remove(props.item.id)" :title="confirm.deletion.title" :text="confirm.deletion.text">
                 <v-tooltip bottom>
                   Permanently Delete
                   <v-btn icon slot="activator">
@@ -137,6 +137,10 @@
         default: () => {
           return []
         }
+      },
+      readonly: {
+        type: Boolean,
+        required: true
       }
     },
     methods: {

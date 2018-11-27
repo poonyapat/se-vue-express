@@ -4,7 +4,7 @@
             <template slot="items" slot-scope="props">
                 <td> {{props.item}}</td>
                 <td class="text-xs-right">
-                    <confirm-dialog @confirm="remove(props.item)" :title="confirm.deletion.title" :text="confirm.deletion.text">
+                    <confirm-dialog @confirm="remove(props.item)" :title="confirm.deletion.title" :text="confirm.deletion.text" v-if="!readonly">
                         <v-btn icon v-if="project.username == username">
                             <v-icon>cancel</v-icon>
                         </v-btn>
@@ -12,7 +12,7 @@
                 </td>
             </template>
         </v-data-table>
-        <v-card class="ma-3">
+        <v-card class="ma-3" v-if="!readonly">
             <v-layout row class="pa-2">
                 <v-text-field v-model="input.user" label="Add Member" :error-messages="error.addMember.show?error.addMember.text: []"
                     clearable></v-text-field>
@@ -88,7 +88,10 @@
             }
         },
         computed: {
-            ...mapState(['username', 'route'])
+            ...mapState(['username', 'route']),
+            readonly(){
+                return this.project.status == 'Close'
+            }
         },
         methods: {
             async add() {
