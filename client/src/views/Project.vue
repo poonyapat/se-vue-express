@@ -1,7 +1,10 @@
 <template>
-  <v-container class="secondary" fill-height fluid v-if="validation">
-    <v-layout row wrap>
-      <v-flex>
+  <div class="text-xs-center" v-if="!loaded">
+    <v-progress-circular :size="200" :width="7" color="cyan lighten-1" indeterminate></v-progress-circular>
+  </div>
+  <v-container class="secondary" fill-height fluid v-else-if="validation">
+    <v-layout row wrap justify-center>
+      <v-flex v-if="loaded">
         <div class="text-xs-left white--text ma-2">
           <h1> {{project.name}} </h1>
           <p> {{project.description}} </p>
@@ -41,6 +44,7 @@
   export default {
     data() {
       return {
+        loaded: false,
         validation: false,
         project: {},
         id: '',
@@ -97,8 +101,10 @@
       DataAnalysisTab
     },
     async mounted() {
+      this.loaded = false
       this.reload()
       this.validation = (await ProjectService.hasPermission(this.route.params.id, this.username)).data.validation
+      this.loaded = true
     },
     methods: {
       async reload() {
