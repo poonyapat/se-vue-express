@@ -11,6 +11,7 @@ module.exports = (app) => {
         TestController.test)
 
     app.post('/login',
+        UserControllerPolicy.authenticate,
         UserController.authenticate)
 
     app.post('/update',

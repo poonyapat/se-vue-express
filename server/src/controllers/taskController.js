@@ -12,18 +12,20 @@
              },
          })
          if (brethrenTaskStatuses.length === 1) {
-             await Task.update({
-                 status: task.status
-             }, {
+             const parent = await Task.findOne({
                  where: {
                      id: task.parent
-                 },
+                 }
+             })
+             await parent.update({
+                 status: task.status
              })
              await TaskWatcher.create({
                  status: task.status,
                  taskId: task.parent,
                  projectId: task.projectId
              })
+             await updateParentStatus(parent)
          } else {
              const parent = await Task.findOne({
                  where: {
@@ -39,6 +41,7 @@
                      taskId: task.parent,
                      projectId: task.projectId
                  })
+                 await updateParentStatus(parent)
              }
          }
      }
@@ -212,6 +215,12 @@
                  taskIds = subTasks.map(e => e.id)
              }
              await Task.destroy({
+                 where: {
+                     id: { in: allIds
+                     }
+                 }
+             })
+             await TaskWatcher.destroy({
                  where: {
                      id: { in: allIds
                      }

@@ -18,7 +18,6 @@ module.exports = {
         } catch (err) {
             res.status(400).send({
                 error: 'This account is already exist'
-                // error: err
             })
         }
     },
@@ -38,8 +37,7 @@ module.exports = {
             res.send(user)
         }catch (err) {
             res.status(500).send({
-                // error: 'An error has occured trying to login'
-                error: err
+                error: 'An error has occured trying to find user'
             })
         }
     },
@@ -68,43 +66,33 @@ module.exports = {
             })
         } catch (err) {
             res.status(500).send({
-                // error: 'An error has occured trying to login'
-                error: err
+                error: 'An error has occured trying to login'
             })
         }
     },
 
     async update(req, res){
         try{
-            console.log("------------------update------------------")
-            console.log(req.body)
             const user = await User.findOne({
                 where: {
                     username: req.body.username
                 }
             })
             const {phone,email} = req.body.userData;
-            console.log(phone)
-            console.log(email)
-            if(phone != "" ){
+            if(phone){
                 await user.update({
                    phoneNumber : phone
                 })
             }
-            console.log("11111")
-            if(email != ""){
-                console.log("1.5")
+            if(email){
                 await user.update({
                    email: email
                  })
             }
-                console.log("22222")
-
                 res.send({msg: 'Add Complete'})
         }catch(err) {
-            res.status(501).send({
-                error: 'Can not update profile'
-                // error: err
+            res.status(500).send({
+                error: 'An error has occured trying to update user\'s data'
             })
         }
     }

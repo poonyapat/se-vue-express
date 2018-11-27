@@ -1,9 +1,9 @@
 <template>
     <v-data-table :headers="headers" :items="issues" hide-actions class="elevation-1">
-        <tr slot="items" slot-scope="props">
+        <tr slot="items" slot-scope="props" :style="'background-color: '+rowColor(props.item.status)">
             <td> {{ `${props.item.taskId} - ${namesMapping[props.item.taskId]}`}} </td>
             <td> {{props.item.description}} </td>
-            <td :style="'color: '+rowColor(props.item.status)"> {{props.item.status}} </td>
+            <td> {{props.item.status}} </td>
             <td> {{props.item.reporterUsername}} </td>
             <td class="text-xs-right">
                 <v-menu left v-if="!readonly && props.item.status != 'Cancelled' && props.item.status != 'Complete'">
@@ -59,10 +59,6 @@
                     status: 'Analyzing',
                     icon: 'play_arrow',
                     label: 'analyzing',
-                }, {
-                    status: 'Solving',
-                    icon: 'play_arrow',
-                    label: 'solving',
                 }, {
                     status: 'Complete',
                     icon: 'play_arrow',
@@ -125,10 +121,10 @@
             },
             rowColor(status) {
                 if (status == 'Ignore') return '#88888888'
-                if (status == 'Cancelled') return '#882222'
-                if (status == 'Complete') return '#228822'
-                if (status == 'Analyzing') return '#F80'
-                return 'black'
+                if (status == 'Cancelled') return '#a85050'
+                if (status == 'Complete') return '#50a852'
+                if (status == 'Analyzing') return '#ffcc68'
+                return 'white'
             }
         },
         watch: {
