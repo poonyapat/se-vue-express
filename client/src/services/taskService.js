@@ -59,10 +59,6 @@ export default {
                     }
                 })
                 if (selectedTasks.length == 0) {
-                    // out.push({
-                    //     id: parentId.id,
-                    //     cost: parentId.cost
-                    // })
                     out[parentId.id] = parentId.cost
                 }
                 let naCost = 0

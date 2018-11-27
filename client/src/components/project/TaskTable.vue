@@ -163,10 +163,7 @@
             break
           }
         }
-        let task = (await TaskService.findOne(parent.id)).data
-        if (parent.id == 0)
-          task = {}
-        this.$emit('showInfo', task)
+        this.$emit('showInfo', parent.id? (await TaskService.findOne(parent.id)).data: {})
       },
       rowColor(status) {
         if (status == 'Done') {

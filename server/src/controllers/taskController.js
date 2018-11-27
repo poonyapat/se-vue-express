@@ -3,23 +3,101 @@
      TaskWatcher
  } = require('../models')
 
+ async function updateParentStatus(task) {
+     if (task.parent != 0 && 'status' in task._changed) {
+         const brethrenTaskStatuses = await Task.count({
+             group: 'status',
+             where: {
+                 parent: task.parent
+             },
+         })
+         if (brethrenTaskStatuses.length === 1) {
+             await Task.update({
+                 status: task.status
+             }, {
+                 where: {
+                     id: task.parent
+                 },
+             })
+             await TaskWatcher.create({
+                 status: task.status,
+                 taskId: task.parent,
+                 projectId: task.projectId
+             })
+         } else {
+             const parent = await Task.findOne({
+                 where: {
+                     id: task.parent
+                 }
+             })
+             await parent.update({
+                 status: 'OnGoing'
+             })
+             if ('status' in parent._changed) {
+                 await TaskWatcher.create({
+                     status: task.status,
+                     taskId: task.parent,
+                     projectId: task.projectId
+                 })
+             }
+         }
+     }
+ }
+
+ async function updateChildrenStatus(task) {
+     const tasks = await Task.findAll({
+         where: {
+             parent: task.id,
+             status: {
+                 ne: task.status
+             }
+         },
+         attributes: ['id']
+     })
+     let taskIds = tasks.map(e => e.id)
+     let allIds = []
+     while (taskIds.length > 0) {
+         let subTasks = await Task.findAll({
+             where: {
+                 parent: { in: taskIds
+                 },
+                 status: {
+                     ne: task.status
+                 }
+             },
+             attributes: ['id']
+         })
+         allIds = allIds.concat(taskIds)
+         taskIds = subTasks.map(e => e.id)
+     }
+     await Task.update({
+         status: task.status
+     }, {
+         where: {
+             id: { in: allIds
+             }
+         },
+     })
+     let log = []
+     for (let index in allIds) {
+         log.push({
+             status: task.status,
+             taskId: allIds[index],
+             projectId: task.projectId
+         })
+     }
+     await TaskWatcher.bulkCreate(log)
+ }
+
  module.exports = {
      async create(req, res) {
          try {
-             if (req.body.parent != 0) {
-                 req.body.status = (await Task.findOne({
-                     attributes: ['status'],
-                     where: {
-                         id: req.body.parent
-                     }
-                 })).status
-             }
              const task = await Task.create(req.body)
              await TaskWatcher.create({
-                status: task.status,
-                taskId: task.id,
-                projectId: task.projectId
-            })
+                 status: task.status,
+                 taskId: task.id,
+                 projectId: task.projectId
+             })
              res.send({
                  task: task
              })
@@ -32,20 +110,9 @@
 
      async findAll(req, res) {
          try {
-            //  if (!req.query.parent && req.query.parent != 0) {
-            //     console.log(req.query)
-            //     console.log("-----------------------------------asdsad----------")
-            //     res.status(403).send('Invalid Parent Tasks')
-            //  }
              const tasks = await Task.findAll({
                  where: req.query
              })
-             for (let index = 0; index < tasks.length; index++) {
-                 const element = tasks[index];
-                if (element.parent != 0) {
-                        res.status(403).send('Invalid Parent Tasks')
-                     }
-             }
              if (!tasks) {
                  res.status(204).send([])
              }
@@ -59,22 +126,21 @@
 
      async findAllWithSelectedAttributes(req, res) {
          try {
-            const tasks = await Task.findAll({
-                where: JSON.parse(req.query.query),
-                attributes: req.query.attributes
+             const tasks = await Task.findAll({
+                 where: JSON.parse(req.query.query),
+                 attributes: req.query.attributes
              })
-            if (!tasks) {
-                res.status(204).send([])
-            }
-            res.send(tasks)
+             if (!tasks) {
+                 res.status(204).send([])
+             }
+             res.send(tasks)
          } catch (err) {
-             console.log(err)
-            res.status(500).send({
-                error: err
-            })
-        }
+             res.status(500).send({
+                 error: err
+             })
+         }
      },
-     
+
      async findOne(req, res) {
          try {
              const task = await Task.findOne({
@@ -82,9 +148,14 @@
                      id: req.query.id
                  }
              })
+             if (!task) {
+                 res.status(404).send({
+                     error: 'Task is not found'
+                 })
+             }
              res.send(task)
          } catch (err) {
-             res.status(501).send({
+             res.status(500).send({
                  error: err
              })
          }
@@ -92,7 +163,6 @@
 
      async update(req, res) {
          try {
-             console.log(req.body)
              const task = await Task.findOne({
                  where: {
                      id: req.body.id
@@ -103,78 +173,21 @@
                      error: 'Task is not found'
                  })
              }
-             let taskStatus = task.status
              await task.update(req.body.data)
-             if (taskStatus !== req.body.data.status && taskStatus) {
+             if ('status' in task._changed) {
                  await TaskWatcher.create({
                      status: task.status,
                      taskId: task.id,
                      projectId: task.projectId
                  })
-                 const tasks = await Task.findAll({
-                     where: {
-                         parent: req.body.id
-                     },
-                     attributes: ['id']
-                 })
-                 let taskIds = tasks.map(e => e.id)
-                 let allIds = []
-                 while (taskIds.length > 0) {
-                     let subTasks = await Task.findAll({
-                         where: {
-                             parent: { in: taskIds
-                             }
-                         }
-                     })
-                     allIds = allIds.concat(taskIds)
-                     taskIds = subTasks.map(e => e.id)
-                 }
-                 await Task.update({
-                     status: req.body.data.status
-                 }, {
-                     where: {
-                         id: { in: allIds
-                         }
-                     },
-                 })
-                 let temp = []
-                 for (let index in allIds) {
-                     temp.push({
-                         status: task.status,
-                         taskId: allIds[index],
-                         projectId: task.projectId
-                     })
-                 }
-                 console.log(temp, allIds)
-                 await TaskWatcher.bulkCreate(temp)
+                 await updateChildrenStatus(task)
              }
-             if (task.parent != 0 && taskStatus !== req.body.data.status) {
-                 const brethrenTaskStatuses = await Task.count({
-                     group: 'status',
-                     where: {
-                         parent: task.parent
-                     },
-                 })
-                 if (brethrenTaskStatuses.length === 1) {
-                     console.log(task.status, task.parent)
-                     await Task.update({
-                         status: task.status
-                     }, {
-                         where: {
-                             id: task.parent
-                         },
-                     })
-                     await TaskWatcher.create({
-                         status: task.status,
-                         taskId: task.parent,
-                         projectId: task.projectId
-                     })
-                 }
-             }
+             await updateParentStatus(task)
              res.send({
                  msg: 'Complete Process'
              })
          } catch (error) {
+             console.log(error)
              res.status(500).send({
                  error: error
              })

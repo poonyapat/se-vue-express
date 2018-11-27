@@ -60,7 +60,11 @@ import EditInfoDialog from '@/components/project/EditInfoDialog'
         props: {
             project: {
                 type: Object,
-                required: true
+                required: true,
+                default: {
+                    members: [],
+                    createdAt: ''
+                }
             },
         },
         components: {
@@ -68,9 +72,3 @@ import EditInfoDialog from '@/components/project/EditInfoDialog'
         }
     }
 </script>
-
-<style>
-    /* a{
-    background: 
-} */
-</style>
