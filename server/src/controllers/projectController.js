@@ -125,24 +125,25 @@
                  }
              })
              if (!project) {
-                 res.status(403).send({
-                     error: "Invalid Project ID"
+                 res.status(404).send({
+                     error: "Project is not found"
                  })
              }
              const username = req.body.user;
-             if (project.members.indexof(username) != -1) {
-                 project.members.pop(username)
-                 await project.update({
-                     members: project.members
-                 })
-                 res.send({
-                     msg: "remove complete"
-                 })
-             } else {
-                 res.status(403).send({
-                     error: "Invalid Username"
-                 })
+             for (let i in project.members) {
+                 if (project.members[i] == username) {
+                    project.members.pop(username)
+                    await project.update({
+                        members: project.members
+                    })
+                    res.send({
+                        msg: "remove complete"
+                    })
+                 }
              }
+             res.status(403).send({
+                 error: "Invalid Username"
+             })
          } catch (err) {
              res.status(500).send({
                  error: 'An error has occured trying to login'
