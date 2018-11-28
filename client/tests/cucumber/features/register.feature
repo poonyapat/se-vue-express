@@ -6,7 +6,7 @@ Feature: Create user account
         And phonenumber is "0899999999"
         And email is "helloworld@gmail.com"
         When create account
-        Then complete creation
+        Then create account success
         
     Scenario: Create account without username
         And password is "password"
@@ -40,4 +40,5 @@ Feature: Create user account
         When create account
         Then error status code 400 with "This account is already exist"
     Scenario: Create account with wrong format phonenumber
+    
     Scenario: Create account with wrong format email
