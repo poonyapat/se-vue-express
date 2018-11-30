@@ -35,7 +35,7 @@
             </div>
         </v-card-title>
         <v-card-title primary-title>
-            <div>
+            <div v-if="project.members">
                 <h4 class="headline mb-0"> Members </h4>
                 <div v-for="member in project.members" :key="member">
                     {{member}}
@@ -60,7 +60,6 @@ import EditInfoDialog from '@/components/project/EditInfoDialog'
         props: {
             project: {
                 type: Object,
-                required: true,
                 default: {
                     members: [],
                     createdAt: ''

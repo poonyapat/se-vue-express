@@ -66,12 +66,13 @@
                          username: req.body.user
                      }
                  })
+                 console.log(user)
                  if (!user) {
                      res.status(403).send({
                          error: 'Invalid username'
                      })
                  }
-                 if (project.members.indexof(user.username) == -1) {
+                 if (project.members.indexOf(user.username) == -1) {
                      project.members.push(user.username)
                      await project.update({
                          members: project.members
@@ -86,6 +87,7 @@
                  }
              }
          } catch (err) {
+             console.log(err)
              res.status(500).send({
                  error: err
              })
@@ -132,7 +134,7 @@
              const username = req.body.user;
              for (let i in project.members) {
                  if (project.members[i] == username) {
-                    project.members.pop(username)
+                    project.members.splice(i,1)
                     await project.update({
                         members: project.members
                     })
