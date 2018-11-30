@@ -66,7 +66,6 @@
                          username: req.body.user
                      }
                  })
-                 console.log(user)
                  if (!user) {
                      res.status(403).send({
                          error: 'Invalid username'
@@ -87,7 +86,6 @@
                  }
              }
          } catch (err) {
-             console.log(err)
              res.status(500).send({
                  error: err
              })
