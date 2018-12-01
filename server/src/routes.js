@@ -35,6 +35,9 @@ module.exports = (app) => {
 
     app.get('/projects',
         ProjectController.findAll)
+
+    app.get('/projects/onlyUserLive',
+        ProjectController.findAllUserHaveAnotherProject)
     
     app.get('/project/permission',
         ProjectController.hasPermission)

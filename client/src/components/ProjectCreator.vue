@@ -66,6 +66,7 @@
           if (this.input.name != "") {
             this.input.username = this.username;
             await ProjectService.create(this.input);
+            this.$emit("refresh");
             this.show = false;
             this.input.name = "";
             this.input.description = "";

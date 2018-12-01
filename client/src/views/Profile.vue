@@ -15,7 +15,7 @@
                            
                             <v-icon>edit</v-icon> 
                         </router-link>    -->
-                        <edition></edition>
+                        <edit-profile-dialog @refresh="loadProfile"></edit-profile-dialog>
                     </v-card-title>
                     <v-divider></v-divider>
                     <v-card-text>
@@ -63,7 +63,7 @@
 <script>
 import ProfileTabs from '@/components/ProfileTabs'
 import UserService from '@/services/userService'
-import Edition from '@/components/Edition'
+import EditProfileDialog from '@/components/EditProfileDialog'
 
 import {mapState} from 'vuex'
 export default {
@@ -74,7 +74,7 @@ export default {
         }
     },
     components: {
-        ProfileTabs, Edition
+        ProfileTabs, EditProfileDialog
     },
     computed: {
         ...mapState([
@@ -83,7 +83,14 @@ export default {
     },
     async mounted(){
         this.user = (await UserService.findOne(this.username)).data
+    },
+    methods:{
+            loadProfile: async function () {
+                     this.user = (await UserService.findOne(this.username)).data
+                     console.log("refresh prof")
+            }
     }
+    
 }
 </script>
 

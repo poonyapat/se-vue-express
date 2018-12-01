@@ -9,18 +9,18 @@
             ></v-text-field> 
             <v-spacer></v-spacer>
             <!-- <v-toolbar-items> -->
-                <project-creator>
+                <project-creator @refresh="loadProject">
                 </project-creator> 
             <!-- </v-toolbar-items> -->
         </v-toolbar >
 
-        <v-pagination
+        <!-- <v-pagination
                 v-if="projects.length"
                 v-model="page"
                 :length="maxPage"
                 :total-visible="7"
                 round
-         ></v-pagination>
+         ></v-pagination> -->
        
         <v-list-tile 
             v-for="project in projects" 
@@ -39,15 +39,13 @@
             </v-list-tile-content>
                           
         </v-list-tile>
-            <v-pagination
+            <!-- <v-pagination
                 v-if="projects.length"
                 v-model="page"
                 :length="maxPage"
                 :total-visible="7"
                 round
-            ></v-pagination>
-
-
+            ></v-pagination> -->
     </v-list>
 </template>
  
@@ -63,26 +61,34 @@ export default {
             projects: [],
             query: '',
             
-             page:1,
-             maxPage: 1,
-    
+            page:1,
+            maxPage: 1,
+         
+          
     }
     },
     async mounted() {
-       
-        this.projects = (await ProjectService.findAll({
-            username: this.username,
-        })).data  
-        
-  
+        this.projects = (await ProjectService.findAllUserHaveAnotherProject({
+              username: this.username
+        })).data 
+      
+      
+
    
     },
     methods: {
         color(project) {
             return project.status === 'Open'? 'cyan': 'grey'
         },
-         navigateTo(destination){
+        navigateTo(destination){
             this.$router.push(destination)
+        },
+        loadProject: async function() {
+            this.projects = (await ProjectService.findAllUserHaveAnotherProject({
+                username: this.username
+            })).data 
+           
+
         }
     },
     computed: {

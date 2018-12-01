@@ -58,6 +58,9 @@ import { mapState } from "vuex";
             try{
                 console.log("in update")
                 await UserService.update(this.username,this.input)
+                this.$emit("refresh");
+                this.input.phone =null;
+                this.input.email=null;
                 console.log("in update below")
                 this.show = false; 
             }catch(error){

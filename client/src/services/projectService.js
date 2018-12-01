@@ -15,6 +15,11 @@ export default {
             params: queryObject
         })
     },
+    findAllUserHaveAnotherProject(queryObject){
+        return Api().get('projects/onlyUserLive', {
+            params: queryObject})
+    },
+
     hasPermission(projectId, username) {
         return Api().get('project/permission', {
             params: {

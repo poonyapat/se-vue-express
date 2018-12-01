@@ -2,6 +2,7 @@
      Project,
      User
  } = require('../models')
+ const Sequelize = require('sequelize');
  module.exports = {
      async create(req, res) {
          try {
@@ -33,6 +34,33 @@
              })
          }
      },
+     async findAllUserHaveAnotherProject(req, res) {
+         try {
+             const projects = await Project.findAll({
+                 where: Sequelize.or({
+                     username: req.query.username
+                 }, {
+                     members: {
+                         [Sequelize.Op.contains]: [req.query.username]
+                     }
+                 })
+
+
+             })
+             if (!projects) {
+                 res.status(204).send([])
+             }
+             res.send(projects)
+         } catch (err) {
+             console.log(err)
+             res.status(500).send({
+                 error: err
+             })
+         }
+     },
+
+
+
      async findOne(req, res) {
          try {
              const project = await Project.findOne({
@@ -132,13 +160,13 @@
              const username = req.body.user;
              for (let i in project.members) {
                  if (project.members[i] == username) {
-                    project.members.splice(i,1)
-                    await project.update({
-                        members: project.members
-                    })
-                    res.send({
-                        msg: "remove complete"
-                    })
+                     project.members.splice(i,1)
+                     await project.update({
+                         members: project.members
+                     })
+                     res.send({
+                         msg: "remove complete"
+                     })
                  }
              }
              res.status(403).send({
@@ -153,7 +181,9 @@
      async update(req, res) {
          try {
              if (!req.body.project) {
-                 res.status(403).send({error: 'New Information is not defined'})
+                 res.status(403).send({
+                     error: 'New Information is not defined'
+                 })
              }
              await Project.update({
                  name: req.body.project.name,
@@ -165,7 +195,9 @@
                      id: req.body.project.id
                  },
              })
-             res.send({msg: "Update Complete"})
+             res.send({
+                 msg: "Update Complete"
+             })
          } catch (err) {
              console.log(err)
              res.status(500).send({

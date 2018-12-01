@@ -6,7 +6,8 @@
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
-    "test": "cucumber-js tests/cucumber"
+    "test": "cucumber-js tests/cucumber",
+    "unittest": "./node_modules/.bin/mocha --colors tests/unit/*"
   },
   "dependencies": {
     "axios": "^0.18.0",
@@ -25,7 +26,9 @@
     "babel-polyfill": "^6.26.0",
     "babel-preset-env": "^1.7.0",
     "babel-register": "^6.26.0",
+    "chai": "^4.2.0",
     "cucumber": "^5.0.2",
+    "mocha": "^5.2.0",
     "vue-template-compiler": "^2.5.17"
   },
   "eslintConfig": {
